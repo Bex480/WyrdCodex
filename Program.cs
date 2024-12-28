@@ -32,6 +32,17 @@ builder.Services.AddAuthorization(options =>
 
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowLocalhost", policy =>
+    {
+        policy.WithOrigins("http://localhost:*, https://localhost:*")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -63,7 +74,8 @@ builder.Services.AddSwaggerGen(options =>
 });
 builder.Services.AddDbContext<WyrdCodexDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("WyrdCodexDB")));
 builder.Services.AddScoped<AuthService>();
-
+builder.Services.AddTransient<IEmailService, EmailService>();
+builder.Services.AddScoped<ResetPasswordService>();
 
 
 var app = builder.Build();
@@ -77,6 +89,7 @@ var app = builder.Build();
 
 app.UseHttpsRedirection();
 
+app.UseCors("AllowLocalhost");
 app.UseAuthentication();
 app.UseAuthorization();
 

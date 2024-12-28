@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using WyrdCodexAPI.Data;
 using WyrdCodexAPI.Models;
 using WyrdCodexAPI.Models.DTOs.User;
@@ -12,10 +13,20 @@ namespace WyrdCodexAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController(WyrdCodexDbContext context, AuthService authService) : ControllerBase
+    public class UserController : ControllerBase
     {
-        private readonly WyrdCodexDbContext _context = context;
-        private readonly AuthService _authService = authService;
+        private readonly WyrdCodexDbContext _context;
+        private readonly AuthService _authService;
+        private readonly IEmailService _emailService;
+        private readonly ResetPasswordService _resetPasswordService;
+
+        public UserController(WyrdCodexDbContext context, AuthService authService, IEmailService emailService, ResetPasswordService resetPasswordService) 
+        {
+            _context = context;
+            _authService = authService;
+            _emailService = emailService;
+            _resetPasswordService = resetPasswordService;
+        }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserLoginDTO userLoginDTO)
@@ -140,6 +151,33 @@ namespace WyrdCodexAPI.Controllers
             await _context.SaveChangesAsync();
 
             return Ok();
+        }
+
+        [HttpPost("email")]
+        public async Task<IActionResult> SendDirectMail(string receptor, string subject, string body)
+        {
+            await _emailService.SendEmail(receptor, subject, body);
+            return Ok();
+        }
+
+        [HttpPost("request_password_reset")]
+        public async Task<IActionResult> RequestPasswordReset([EmailAddress] string email)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+
+            if (user == null)
+            {
+                return BadRequest();
+            }
+
+            await _resetPasswordService.SendPasswordResetLink(user);
+
+            return Accepted();
         }
     }
 }

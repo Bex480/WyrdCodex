@@ -34,5 +34,7 @@ namespace WyrdCodexAPI.Data
                 new Role { Id = 2, RoleName = "RegisteredUser" }
             );
         }
+
+        public DbSet<ResetPasswordModel> ResetPasswordRequests { get; set; }
     }
 }

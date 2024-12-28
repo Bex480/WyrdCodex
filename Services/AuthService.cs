@@ -20,6 +20,25 @@ namespace WyrdCodexAPI.Services
             _context = context;
         }
 
+        private const string ValidChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*";
+
+        public string GeneratePassword(int length)
+        {
+            char[] password = new char[length];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                byte[] data = new byte[length];
+                rng.GetBytes(data);
+
+                for (int i = 0; i < length; i++)
+                {
+                    password[i] = ValidChars[data[i] % ValidChars.Length];
+                }
+            }
+
+            return new string(password);
+        }
+
         public string GenerateToken(AuthUser authUser)
         {
             var handler = new JwtSecurityTokenHandler();
