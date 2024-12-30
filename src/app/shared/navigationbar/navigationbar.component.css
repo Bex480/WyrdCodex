@@ -1,7 +1,7 @@
 .headerNavigation{
   width: 100%;
   height: 100px;
-  background-image: linear-gradient(90deg, rgb(208, 208, 208) 0%, rgb(42, 42, 42) 14%, rgb(0, 0, 0) 25%);
+  background-image: linear-gradient(90deg, rgb(105, 103, 103) 0%, rgb(44, 42, 42) 14%, rgb(0, 0, 0) 25%);
   display: flex;
   box-shadow: 2px 4px 20px rgba(0, 0, 0, 1);
 }
@@ -99,6 +99,7 @@
 
 .SVGIcons{
   margin-right: 5%;
+  position: relative;
   fill: none;
   stroke: floralwhite;
   stroke-width: 3;
@@ -125,7 +126,6 @@
 .loginFormRow{
   margin-bottom: 10px;
 }
-
 
 .background {
   position: fixed;
@@ -213,9 +213,7 @@
   align-items: center;
 }
 
-.containerTwo{
 
-}
 
 
 
