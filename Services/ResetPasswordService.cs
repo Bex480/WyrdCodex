@@ -38,7 +38,7 @@ namespace WyrdCodexAPI.Services
             await _context.SaveChangesAsync();
 
             string baseUrl = FrontendSettings.Host;
-            string resetPasswordUrl = $"{baseUrl}/auth/reset-password?token={token}";
+            string resetPasswordUrl = $"{baseUrl}/account/reset-password?token={hashedToken}";
 
             await _emailService.SendEmail(user.Email, "WyrdCodex Password Reset", "Click here to reset password: " +  resetPasswordUrl);
         }

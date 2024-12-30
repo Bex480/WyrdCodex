@@ -2,6 +2,6 @@
 {
     public static class FrontendSettings
     {
-        public static string Host { get; set; } = "http://WyrdCodex.com";
+        public static string Host { get; set; } = "http://localhost:4200";
     }
 }

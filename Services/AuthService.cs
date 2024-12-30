@@ -20,7 +20,7 @@ namespace WyrdCodexAPI.Services
             _context = context;
         }
 
-        private const string ValidChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*";
+        private const string ValidChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 
         public string GeneratePassword(int length)
         {
