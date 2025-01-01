@@ -6,12 +6,14 @@ import { RegisterComponent } from './register/register.component';
 import { ReactiveFormsModule } from "@angular/forms";
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { TwoFactorComponent } from './two-factor/two-factor.component';
 
 @NgModule({
   declarations: [
     RegisterComponent,
     ForgotPasswordComponent,
-    ResetPasswordComponent
+    ResetPasswordComponent,
+    TwoFactorComponent
   ],
     imports: [
         CommonModule,
