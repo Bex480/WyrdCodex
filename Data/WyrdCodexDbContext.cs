@@ -36,5 +36,6 @@ namespace WyrdCodexAPI.Data
         }
 
         public DbSet<ResetPasswordModel> ResetPasswordRequests { get; set; }
+        public DbSet<TwoFactorModel> TwoFactorCodes { get; set; }
     }
 }

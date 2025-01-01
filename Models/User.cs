@@ -7,6 +7,7 @@
         public string UserName { get; set; } = string.Empty;
         public required string Password { get; set; }
         public required string Salt { get; set; }
+        public bool TwoFactorEnabled { get; set; } = false;
 
         public ICollection<UserRole>? UserRoles { get; set; }
     }

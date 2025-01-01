@@ -20,7 +20,7 @@ namespace WyrdCodexAPI.Controllers
 		private readonly IEmailService _emailService;
 		private readonly ResetPasswordService _resetPasswordService;
 
-		public UserController(WyrdCodexDbContext context, AuthService authService, IEmailService emailService, ResetPasswordService resetPasswordService) 
+		public UserController(WyrdCodexDbContext context, AuthService authService, IEmailService emailService, ResetPasswordService resetPasswordService)
 		{
 			_context = context;
 			_authService = authService;
@@ -30,7 +30,19 @@ namespace WyrdCodexAPI.Controllers
 
 		[HttpPost("login")]
 		public async Task<IActionResult> Login([FromBody] UserLoginDTO userLoginDTO)
-		{ 
+		{
+			var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userLoginDTO.Email);
+			if (user == null)
+			{
+				return Unauthorized();
+			}
+
+			if (user.TwoFactorEnabled)
+			{
+				await _authService.Send2FAcode(user);
+				return Accepted();
+			}
+
 			var token = await _authService.LoginAsync(userLoginDTO.Email, userLoginDTO.Password);
 
 			if (token == null)
@@ -39,6 +51,29 @@ namespace WyrdCodexAPI.Controllers
 			}
 
 			return Ok(token);
+		}
+
+		[HttpPost("login_2FA")]
+		public async Task<IActionResult> Login2FA([EmailAddress] string email, string code)
+		{
+			if (await _authService.Verify2FAcode(email, code))
+			{
+				var user = await _context.Users.Include(u => u.UserRoles).ThenInclude(ur => ur.Role).FirstOrDefaultAsync(u => u.Email == email);
+
+                if (user == null)
+				{
+					return Unauthorized();
+				}
+
+				var token = _authService.GenerateToken(new AuthUser
+				{
+                    Username = user.UserName,
+                    Email = email,
+                    Roles = user.UserRoles.Select(ur => ur.Role.RoleName).ToList()
+                });
+				return Ok(token);
+			}
+			return Unauthorized();
 		}
 
 		// GET: api/<UserController>

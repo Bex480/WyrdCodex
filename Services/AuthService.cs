@@ -8,19 +8,23 @@ using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
 using WyrdCodexAPI.Data;
+using System.ComponentModel.DataAnnotations;
 
 namespace WyrdCodexAPI.Services
 {
     public class AuthService
     {
         private readonly WyrdCodexDbContext _context;
+        private readonly IEmailService _emailService;
 
-        public AuthService(WyrdCodexDbContext context)
+        public AuthService(WyrdCodexDbContext context, IEmailService emailService)
         {
             _context = context;
+            _emailService = emailService;
         }
 
         private const string ValidChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        private const string ValidNums = "1234567890";
 
         public string GeneratePassword(int length)
         {
@@ -37,6 +41,23 @@ namespace WyrdCodexAPI.Services
             }
 
             return new string(password);
+        }
+
+        public string GenerateCode(int length)
+        {
+            char[] code = new char[length];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                byte[] data = new byte[length];
+                rng.GetBytes(data);
+
+                for (int i = 0; i < length; i++)
+                {
+                    code[i] = ValidNums[data[i] % ValidNums.Length];
+                }
+            }
+
+            return new string(code);
         }
 
         public string GenerateToken(AuthUser authUser)
@@ -90,7 +111,7 @@ namespace WyrdCodexAPI.Services
 
         public async Task<string?> LoginAsync(string email, string password)
         {
-            
+
             if (!await VerifyPassword(email, password))
             {
                 return null;
@@ -112,17 +133,17 @@ namespace WyrdCodexAPI.Services
 
         public async Task<bool> VerifyPassword(string email, string password)
         {
-     
+
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
 
             if (user == null)
             {
                 return false;
             }
-            
+
             byte[] salt = Convert.FromBase64String(user.Salt);
 
-            
+
             string hashedPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(
                                     password: password,
                                     salt: salt,
@@ -130,9 +151,41 @@ namespace WyrdCodexAPI.Services
                                     iterationCount: 10000,
                                     numBytesRequested: 256 / 8));
 
-            
+
             return hashedPassword == user.Password;
         }
 
+        public async Task Send2FAcode(User user)
+        {
+            var code = GenerateCode(4);
+
+            DateTimeOffset expiryDateTime = DateTimeOffset.UtcNow.AddMinutes(15);
+
+            var entry = new TwoFactorModel()
+            {
+                UserID = user.Id,
+                Code = code,
+                Email = user.Email,
+                ExpiryDateTime = expiryDateTime,
+            };
+
+            _context.TwoFactorCodes.Add(entry);
+
+            await _context.SaveChangesAsync();
+
+            await _emailService.SendEmail(user.Email, "WyrdCodex 2FA", $"Your 2FA code is: {code}");
+        }
+
+        public async Task<bool> Verify2FAcode([EmailAddress] string email, string code)
+        {
+            var entry = await _context.TwoFactorCodes.FirstOrDefaultAsync(c => c.Code == code);
+
+            if (entry == null || entry.Email != email || DateTimeOffset.UtcNow > entry.ExpiryDateTime)
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }
