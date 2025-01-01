@@ -1,0 +1,31 @@
+<div class="headerNavigation">
+  <img src="/naturePicture.png" alt="image" class="logo">
+  <div class="appName">Wyrd Codex</div>
+  <div class="navigationContainer">
+    <div class="navigationButton">Home</div>
+    <div class="navigationButton">Metagame</div>
+    <div class="navigationButton">Collection</div>
+    <div class="navigationButton">News</div>
+    <div class="navigationButton">Shop</div>
+  </div>
+  <div class="navigationIconContainer">
+    <svg routerLink="/account/profile" width="10%" height="50%" viewBox="-25 -25 50 50" class="SVGIcons">
+      <g>
+        <path d="M 5 5, L 17 17" />
+        <circle cx="-5" cy="-5" r="13" />
+      </g>
+    </svg>
+    <svg width="10%" height="50%" viewBox="-25 -25 50 50" class="SVGIcons" (click)="toggleDropdown()">
+      <g>
+        <circle cx="0" cy="0" r="24" />
+        <circle cx="0" cy="-10" r="9" />
+        <path d="M -15 15, Q 0 -10, 15 15" />
+      </g>
+    </svg>
+    <div class="dropdown" *ngIf="isDropdownVisible">
+		<button routerLink="/account/login">Login</button>
+		<button routerLink="/account/register">Register</button>
+    </div>
+  </div>
+</div>
+<router-outlet></router-outlet>
