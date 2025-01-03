@@ -1,21 +1,21 @@
 <div class="TwoFactorBackground">
-	<form [formGroup]="twoFactorForm" class="form" (ngSubmit)="onSubmit()">
-
+	<form class="form" (ngSubmit)="onSubmit()" *ngIf="!loading">
 		<div class="info">
 			<span class="title">Two-Factor Verification</span>
 			<p class="description">Enter the two-factor authentication code sent to your E-mail</p>
 		</div>
 
-		<div class="input-fields">
-			<input formControlName="digit1" type="tel" maxlength="1">
-			<input formControlName="digit2" type="tel" maxlength="1">
-			<input formControlName="digit3" type="tel" maxlength="1">
-			<input formControlName="digit4" type="tel" maxlength="1">
+		<div style="display: flex; justify-content: center; margin-right: 18%">
+			<ng-otp-input
+				[config]="config"
+				(onInputChange)="onOtpChange($event)">
+			</ng-otp-input>
 		</div>
 
 		<div class="action-btns">
-			<button class="verify" type="submit">Verify</button>
-			<button class="clear" type="button" (click)="onClear()">Clear</button>
+			<button class="verify" type="submit" [disabled]="otp.length !== 4">Verify</button>
 		</div>
 	</form>
+
+	<app-loading-screen *ngIf="loading"></app-loading-screen>
 </div>

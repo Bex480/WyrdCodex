@@ -14,6 +14,8 @@ import { ApiConfig } from '../../config/api.config';
 export class ResetPasswordComponent implements OnInit {
 	resetPasswordForm: FormGroup;
 	token: string | null = null;
+	success: boolean = false;
+	loading: boolean = false;
 
 	constructor(
 		private fb: FormBuilder,
@@ -37,7 +39,7 @@ export class ResetPasswordComponent implements OnInit {
 
 		if (!this.token) {
 			console.error('Token is missing.');
-			this.router.navigate(['/']); // Redirect to home or login page if token is missing
+			this.router.navigate(['/account/login']); // Redirect to home or login page if token is missing
 		}
 	}
 
@@ -50,11 +52,26 @@ export class ResetPasswordComponent implements OnInit {
 
 	onSubmit(): void {
 		if (this.resetPasswordForm.valid && this.token) {
+			this.loading = true;
 			const { password } = this.resetPasswordForm.value;
 
 			this.http
-				.put(`${ApiConfig.apiUrl}/User/reset_password`, { token: this.token, newPassword: password })
-				.subscribe();
+				.put(`${ApiConfig.apiUrl}/User/reset_password`,
+					{ token: this.token, newPassword: password },
+					{ observe: "response"})
+				.subscribe(
+				(response: any) =>
+						{
+							if (response.status === 200){
+								this.loading = false;
+								this.success = true;
+							}
+						},
+					() =>
+					{
+						this.router.navigate(["/account/reset-password"], { queryParams: { token: this.token }})
+					}
+				);
 		}
 	}
 }
