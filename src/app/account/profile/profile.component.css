@@ -1,8 +1,10 @@
 .backgroundProfile{
-	height: 100vh;
-	width: 100vw;
+	position: fixed;
+	height: 100%;
+	width: 100%;
 	background-color: rgb(38, 38, 38);
 	color: white;
+	z-index: -1;
 }
 
 .optionsColumn{
@@ -11,51 +13,12 @@
 	border-right: 4px solid white;
 }
 
-.appNameContainer{
-	height: 10%;
-	margin-bottom: 50%;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	font-size: 45px;
-	font-weight: bold;
-	color: antiquewhite;
-	cursor: pointer;
-	text-shadow:
-		0 0 10px darkorange,
-		0 0 20px darkorange,
-		0 0 30px darkorange,
-		0 0 40px darkorange,
-		0 0 50px darkorange;
-	animation: flicker 1.5s infinite alternate ease-in-out;
-}
-
-@keyframes flicker {
-	0% {
-		text-shadow:
-			0 0 5px darkorange,
-			0 0 10px darkorange,
-			0 0 15px darkorange;
-	}
-	50% {
-		text-shadow:
-			0 0 15px darkorange,
-			0 0 25px darkorange,
-			0 0 30px darkorange;
-	}
-	100% {
-		text-shadow:
-			0 0 10px darkorange,
-			0 0 20px darkorange,
-			0 0 30px darkorange;
-	}
-}
-
 .profileNavigationContainer{
 	height: 40%;
 	display: flex;
 	flex-flow: column;
 	align-items: flex-end;
+	padding-top: 50%;
 }
 
 .profileNavigationContainer div{
@@ -78,6 +41,13 @@
 	cursor: pointer;
 }
 
-
+.back-arrow {
+	width: 0;
+	height: 0;
+	border-top: 20px solid transparent;
+	border-bottom: 20px solid transparent;
+	border-right: 30px solid white;
+	cursor: pointer;
+}
 
 

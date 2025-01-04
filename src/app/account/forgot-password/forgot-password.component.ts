@@ -13,6 +13,7 @@ import { ApiConfig } from '../../config/api.config';
 export class ForgotPasswordComponent {
 	forgotPasswordForm: FormGroup;
 	private email: any;
+	success: boolean = false;
 
 	constructor(private fb: FormBuilder, private http: HttpClient) {
 
@@ -25,7 +26,7 @@ export class ForgotPasswordComponent {
 		if (this.forgotPasswordForm.valid) {
 			this.email = this.forgotPasswordForm.value.email;
 			this.http.post(`${ApiConfig.apiUrl}/User/request_password_reset?email=${this.email}`, null).subscribe()
-			console.log('Email for password reset:', this.email);
+			this.success = true;
 		}
 	}
 }

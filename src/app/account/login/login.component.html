@@ -1,6 +1,7 @@
 <div class="backgroundRegister">
-	<div class="containerRegister">
-		<form class="formRegister" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+	<div class="containerRegister" *ngIf="!loading">
+		<form class="formRegister" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
 			<b>Log in to your account</b>
 			<div class="formGroupRow">
 				<label for="email">Email</label>
@@ -15,4 +16,6 @@
 		</form>
 		<button routerLink="/dashboard/main" >Dashboard</button>
 	</div>
+
+	<app-loading-screen *ngIf="loading"></app-loading-screen>
 </div>
