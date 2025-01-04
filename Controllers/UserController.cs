@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 using WyrdCodexAPI.Data;
 using WyrdCodexAPI.Models;
+using WyrdCodexAPI.Models.DTOs;
 using WyrdCodexAPI.Models.DTOs.User;
 using WyrdCodexAPI.Services;
 
@@ -37,12 +39,6 @@ namespace WyrdCodexAPI.Controllers
 				return Unauthorized();
 			}
 
-			if (user.TwoFactorEnabled)
-			{
-				await _authService.Send2FAcode(user);
-				return Accepted();
-			}
-
 			var token = await _authService.LoginAsync(userLoginDTO.Email, userLoginDTO.Password);
 
 			if (token == null)
@@ -50,7 +46,16 @@ namespace WyrdCodexAPI.Controllers
 				return Unauthorized();
 			}
 
-			return Ok(token);
+			if (user.TwoFactorEnabled)
+			{
+				await _authService.Send2FAcode(user);
+				return Accepted();
+			}
+
+			var refreshToken = _authService.GenerateRefreshToken();
+			await _authService.AssignRefreshToken(user.Id, refreshToken);
+
+			return Ok(new { token, refreshToken });
 		}
 
 		[HttpPost("login_2FA")]
@@ -60,18 +65,22 @@ namespace WyrdCodexAPI.Controllers
 			{
 				var user = await _context.Users.Include(u => u.UserRoles).ThenInclude(ur => ur.Role).FirstOrDefaultAsync(u => u.Email == email);
 
-                if (user == null)
+				if (user == null)
 				{
 					return Unauthorized();
 				}
 
 				var token = _authService.GenerateToken(new AuthUser
 				{
-                    Username = user.UserName,
-                    Email = email,
-                    Roles = user.UserRoles.Select(ur => ur.Role.RoleName).ToList()
-                });
-				return Ok(token);
+					Username = user.UserName,
+					Email = email,
+					Roles = user.UserRoles.Select(ur => ur.Role.RoleName).ToList()
+				});
+
+				var refreshToken = _authService.GenerateRefreshToken();
+                await _authService.AssignRefreshToken(user.Id, refreshToken);
+
+                return Ok(new { token, refreshToken });
 			}
 			return Unauthorized();
 		}
@@ -82,7 +91,7 @@ namespace WyrdCodexAPI.Controllers
 		{
 			return Ok(await _context.Users.ToListAsync());
 		}
-		
+
 
 		// GET api/<UserController>/5
 		[HttpGet("{id}")]
@@ -94,9 +103,9 @@ namespace WyrdCodexAPI.Controllers
 			{
 				return NotFound();
 			}
-			
+
 			return Ok(
-				new UserDTO(){ 
+				new UserDTO() {
 					Email = user.Email,
 					UserName = user.UserName
 				});
@@ -198,11 +207,11 @@ namespace WyrdCodexAPI.Controllers
 		[HttpPost("request_password_reset")]
 		public async Task<IActionResult> RequestPasswordReset([EmailAddress] string email)
 		{
-		   
+
 			if (!ModelState.IsValid)
 			{
 				return BadRequest("INVALID EMAIL FORMAT!!!!!!!!!!!!");
-			} 
+			}
 
 			var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
 
@@ -210,14 +219,14 @@ namespace WyrdCodexAPI.Controllers
 			{
 				return BadRequest();
 			}
-		
+
 			await _resetPasswordService.SendPasswordResetLink(user);
 
 			return Accepted();
 		}
 
 		[HttpPut("reset_password")]
-		public async Task<IActionResult> ResetPassword([FromBody] UserResetPasswordDTO userResetPassword) 
+		public async Task<IActionResult> ResetPassword([FromBody] UserResetPasswordDTO userResetPassword)
 		{
 			var resetRequest = await _context.ResetPasswordRequests.FirstOrDefaultAsync(r => r.Token == userResetPassword.Token);
 
@@ -226,7 +235,7 @@ namespace WyrdCodexAPI.Controllers
 				return BadRequest("Invalid Token");
 			}
 
-			if (DateTimeOffset.UtcNow > resetRequest.ExpiryDateTime) 
+			if (DateTimeOffset.UtcNow > resetRequest.ExpiryDateTime)
 			{
 				return Unauthorized("Your token has expired please request a new one.");
 			}
@@ -238,7 +247,7 @@ namespace WyrdCodexAPI.Controllers
 				return NotFound();
 			}
 
-            var (hashedPassword, salt) = _authService.HashPassword(userResetPassword.NewPassword);
+			var (hashedPassword, salt) = _authService.HashPassword(userResetPassword.NewPassword);
 
 			user.Password = hashedPassword;
 			user.Salt = Convert.ToBase64String(salt);
@@ -247,5 +256,88 @@ namespace WyrdCodexAPI.Controllers
 
 			return Ok();
 		}
-	}
+
+
+        [HttpGet("profile")]
+        [Authorize(Roles = "RegisteredUser")]
+        public async Task<IActionResult> GetUserProfile()
+        {
+            var email = User.FindFirst(ClaimTypes.Name)?.Value;
+         
+            if (email == null)
+            {
+                return Unauthorized();
+            }
+
+			var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+
+			if (user == null)
+			{
+				return NotFound();
+			}
+
+			var userDTO = new UserDTO
+			{
+				Email = email,
+				UserName = user.UserName,
+				Is2FAenabled = user.TwoFactorEnabled
+			};
+            
+            return Ok(userDTO);
+        }
+
+        [HttpPut("twofactor")]
+        [Authorize(Roles = "RegisteredUser")]
+        public async Task<IActionResult> Toggle2FA()
+        {
+            var email = User.FindFirst(ClaimTypes.Name)?.Value;
+
+            if (email == null)
+            {
+                return Unauthorized();
+            }
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+			user.TwoFactorEnabled = !user.TwoFactorEnabled;
+
+			await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+		[HttpPost("refresh_token")]
+		public async Task<IActionResult> RefreshToken([FromBody] TokensDTO tokensDTO)
+		{ 
+			var principal = _authService.GetPrincipalFromExpiredToken(tokensDTO.AccessToken);
+
+			var email = principal.FindFirst(ClaimTypes.Name)?.Value;
+            if (email == null) { return Unauthorized("email"); }
+
+            var user = await _context.Users.Include(u => u.UserRoles).ThenInclude(ur => ur.Role).FirstOrDefaultAsync(u => u.Email == email);
+            if (user == null) { return Unauthorized("user"); }
+
+            var existingToken = await _context.RefreshTokens.FirstOrDefaultAsync(x => x.UserID == user.Id);
+            if (existingToken == null) { return Unauthorized("token"); }
+
+            if (existingToken.RefreshToken != tokensDTO.RefreshToken) { return Unauthorized("reftoken"); }
+
+			if (DateTimeOffset.UtcNow > existingToken.ExpiryDateTime) { return Unauthorized("time"); }
+
+            var newAccessToken = _authService.GenerateToken(new AuthUser
+            {
+                Username = user.UserName,
+                Email = email,
+                Roles = user.UserRoles.Select(ur => ur.Role.RoleName).ToList()
+            });
+
+			return Ok(new { token = newAccessToken });
+		}
+
+    }
 }

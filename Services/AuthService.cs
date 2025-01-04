@@ -187,5 +187,62 @@ namespace WyrdCodexAPI.Services
 
             return true;
         }
+
+        public string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randomNumber);
+                return Convert.ToBase64String(randomNumber);
+            }
+        }
+
+        public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
+        {
+            var Key = Encoding.UTF8.GetBytes(AuthSettings.PrivateKey);
+
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateLifetime = false,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Key),
+                ClockSkew = TimeSpan.Zero
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken securityToken);
+            JwtSecurityToken? jwtSecurityToken = securityToken as JwtSecurityToken;
+            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new SecurityTokenException("Invalid token");
+            }
+
+            return principal;
+        }
+
+        public async Task AssignRefreshToken(int userId, string refreshToken) 
+        {
+            var existingToken = await _context.RefreshTokens.FirstOrDefaultAsync(x => x.UserID == userId);
+
+            if (existingToken != null)
+            {
+                _context.RefreshTokens.Remove(existingToken);
+                await _context.SaveChangesAsync();
+            }
+
+            var entry = new RefreshTokenModel
+            {
+                UserID = userId,
+                RefreshToken = refreshToken,
+                ExpiryDateTime = DateTimeOffset.UtcNow.AddDays(30)
+            };
+
+            _context.RefreshTokens.Add(entry);
+
+            await _context.SaveChangesAsync();
+        }
     }
 }
