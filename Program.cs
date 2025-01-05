@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Supabase;
+using Supabase.Interfaces;
 using WyrdCodexAPI.Data;
 using WyrdCodexAPI.Helpers;
 using WyrdCodexAPI.Services;
@@ -7,6 +9,12 @@ using WyrdCodexAPI.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+var supabaseOptions = new SupabaseOptions
+{
+    AutoRefreshToken = true,
+    AutoConnectRealtime = true,
+};
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme) 
     .AddJwtBearer(options =>
@@ -76,6 +84,11 @@ builder.Services.AddDbContext<WyrdCodexDbContext>(options => options.UseNpgsql(b
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddScoped<ResetPasswordService>();
+builder.Services.AddScoped<CardService>();
+
+builder.Services.AddSingleton<Supabase.Client>(provider => new Supabase.Client(builder.Configuration["SUPABASE:URL"],
+                                                              builder.Configuration["SUPABASE:KEY"],
+                                                              supabaseOptions));
 
 
 var app = builder.Build();
