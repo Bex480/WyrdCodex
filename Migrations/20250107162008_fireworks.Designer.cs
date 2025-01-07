@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WyrdCodexAPI.Data;
@@ -11,9 +12,11 @@ using WyrdCodexAPI.Data;
 namespace WyrdCodexAPI.Migrations
 {
     [DbContext(typeof(WyrdCodexDbContext))]
-    partial class WyrdCodexDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250107162008_fireworks")]
+    partial class fireworks
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -63,13 +66,9 @@ namespace WyrdCodexAPI.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.HasKey("Id");
 
-                    b.ToTable("Decks");
+                    b.ToTable("Deck");
                 });
 
             modelBuilder.Entity("WyrdCodexAPI.Models.DeckCard", b =>

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Supabase.Postgrest.Attributes;
+using System.Text.Json.Nodes;
 using WyrdCodexAPI.Data;
 using WyrdCodexAPI.Migrations;
 using WyrdCodexAPI.Models;
@@ -13,7 +15,7 @@ namespace WyrdCodexAPI.Services
         private readonly Supabase.Client _supabase;
         private readonly WyrdCodexDbContext _context;
 
-        public CardService(Supabase.Client supabase, WyrdCodexDbContext context) 
+        public CardService(Supabase.Client supabase, WyrdCodexDbContext context)
         {
             _supabase = supabase;
             _context = context;
@@ -58,6 +60,52 @@ namespace WyrdCodexAPI.Services
             return cards;
         }
 
+        public async Task<List<Card>> GetCards(string? cardName, string? type, string? faction, List<int>? collection)
+        {
+            List<Card> allCards = [];
+
+            if (collection == null) { allCards = await GetAllCards(); }
+            else { allCards = await GetCardsByIDs(collection); }
+
+            var filteredCards = allCards.AsQueryable();
+
+            if (!string.IsNullOrEmpty(cardName)) { filteredCards = filteredCards.Where(c => c.CardName.Contains(cardName, StringComparison.OrdinalIgnoreCase));}
+
+            if (!string.IsNullOrEmpty(type)) { filteredCards = filteredCards.Where(c => c.Type.Equals(type, StringComparison.OrdinalIgnoreCase)); }
+
+            if (!string.IsNullOrEmpty(faction)) { filteredCards = filteredCards.Where(c => c.Faction.Equals(faction, StringComparison.OrdinalIgnoreCase)); }
+
+            return filteredCards.ToList();
+        }
+
+        public async Task CreateDeck(User user, string deckName, IFormFile deckCoverImage)
+        {
+            using var memoryStream = new MemoryStream();
+            await deckCoverImage.CopyToAsync(memoryStream);
+            var imageBytes = memoryStream.ToArray();
+
+            await _supabase.Storage.From("deck_covers").Upload(imageBytes, $"public/{deckCoverImage.FileName}");
+
+            var imageUrl = _supabase.Storage.From("deck_covers").GetPublicUrl($"public/{deckCoverImage.FileName}");
+
+            var newDeck = new Deck
+            {
+                DeckName = deckName,
+                ImageUrl = imageUrl
+            };
+
+            var addedDeck = _context.Decks.Add(newDeck);
+            await _context.SaveChangesAsync();
+
+            _context.UserDecks.Add(new UserDeck
+            {
+                UserId = user.Id,
+                DeckId = addedDeck.Entity.Id
+            });
+
+            await _context.SaveChangesAsync();
+        }
+
         public async Task InsertCard(CardDTO cardDTO)
         {
             using var memoryStream = new MemoryStream();
@@ -90,7 +138,7 @@ namespace WyrdCodexAPI.Services
         }
 
         public async Task UpdateCard(int CardId, CardDTO updatedCard)
-        { 
+        {
             var existingCard = await _context.Cards.FindAsync(CardId);
             if (existingCard == null) { return; }
 
@@ -101,7 +149,7 @@ namespace WyrdCodexAPI.Services
             await _supabase.Storage.From("cards").Move($"{existingCard.Faction}/{existingCard.Type}/{Path.GetFileName(existingCard.ImageUrl)}",
                                                        $"Archive/{existingCard.Faction}/{existingCard.Type}/{Path.GetFileName(existingCard.ImageUrl)}");
 
-            await _supabase.Storage.From("cards").Upload(imageBytes,$"{updatedCard.Faction}/{updatedCard.Type}/{updatedCard.Image.FileName}");
+            await _supabase.Storage.From("cards").Upload(imageBytes, $"{updatedCard.Faction}/{updatedCard.Type}/{updatedCard.Image.FileName}");
 
             var newImageUrl = _supabase.Storage.From("cards").GetPublicUrl($"{updatedCard.Faction}/{updatedCard.Type}/{updatedCard.Image.FileName}");
 
@@ -114,5 +162,35 @@ namespace WyrdCodexAPI.Services
             await _context.SaveChangesAsync();
         }
 
+        public async Task AddCardToCollection(User user, int CardId)
+        {
+            _context.UserCards.Add(new UserCard() { UserId = user.Id, CardId = CardId });
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task AddCardToDeck(int DeckId, int CardId)
+        {
+            _context.DeckCards.Add(new DeckCard() { DeckId = DeckId, CardId = CardId });
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<Deck>> GetDecks(User user)
+        {
+            var decks = await _context.UserDecks.Where(ud => ud.UserId == user.Id).Select(ud => ud.Deck).ToListAsync();
+
+            return decks;
+        }
+
+        public async Task<DeckDTO?> GetDeck(int DeckId)
+        {
+            var deck = await _context.Decks.FindAsync(DeckId);
+            if (deck == null) { return null; }
+
+            var cards = await _context.DeckCards.Where(dc => dc.DeckId == DeckId).Select(dc => dc.Card).ToListAsync();
+
+            return new DeckDTO() { Deck = deck, Cards = cards };
+        }
     }
 }

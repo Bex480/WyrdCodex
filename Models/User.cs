@@ -10,5 +10,7 @@
         public bool TwoFactorEnabled { get; set; } = false;
 
         public ICollection<UserRole>? UserRoles { get; set; }
+        public ICollection<UserCard>? UserCards { get; set; }
+        public ICollection<UserDeck>? UserDecks { get; set; }
     }
 }
