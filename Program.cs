@@ -85,6 +85,7 @@ builder.Services.AddScoped<AuthService>();
 builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddScoped<ResetPasswordService>();
 builder.Services.AddScoped<CardService>();
+builder.Services.AddScoped<ShoppingService>();
 
 builder.Services.AddSingleton<Supabase.Client>(provider => new Supabase.Client(builder.Configuration["SUPABASE:URL"],
                                                               builder.Configuration["SUPABASE:KEY"],

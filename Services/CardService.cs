@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using Supabase.Postgrest.Attributes;
 using System.Text.Json.Nodes;
 using WyrdCodexAPI.Data;
@@ -30,9 +31,11 @@ namespace WyrdCodexAPI.Services
 
         public async Task<List<Card>> GetCardsByIDs(List<int> ids)
         {
-            var cards = await _context.Cards
-                                      .Where(c => ids.Contains(c.Id))
-                                      .ToListAsync();
+            var cards = await _context.Cards.Join( ids,
+                                             c => c.Id,
+                                             id => id,
+                                             (c, id) => c)
+                                             .ToListAsync();
 
             return cards;
         }
@@ -174,6 +177,16 @@ namespace WyrdCodexAPI.Services
             _context.DeckCards.Add(new DeckCard() { DeckId = DeckId, CardId = CardId });
 
             await _context.SaveChangesAsync();
+        }
+
+        public async Task RemoveCardFromDeck(int DeckId, int CardId)
+        {
+            var entry = await _context.DeckCards.FirstOrDefaultAsync(dc => dc.DeckId == DeckId && dc.CardId == CardId);
+            if (entry != null)
+            {
+                _context.DeckCards.Remove(entry);
+                await _context.SaveChangesAsync();
+            }
         }
 
         public async Task<List<Deck>> GetDecks(User user)

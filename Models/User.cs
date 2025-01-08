@@ -1,4 +1,6 @@
-﻿namespace WyrdCodexAPI.Models
+﻿using System.Text.Json.Serialization;
+
+namespace WyrdCodexAPI.Models
 {
     public class User
     {
@@ -12,5 +14,6 @@
         public ICollection<UserRole>? UserRoles { get; set; }
         public ICollection<UserCard>? UserCards { get; set; }
         public ICollection<UserDeck>? UserDecks { get; set; }
+        [JsonIgnore] public Cart? Cart { get; set; }
     }
 }

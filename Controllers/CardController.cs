@@ -124,6 +124,15 @@ namespace WyrdCodexAPI.Controllers
             return Ok();
         }
 
+        [HttpDelete("remove_from_deck")]
+        [Authorize(Roles = "RegisteredUser")]
+        public async Task<IActionResult> RemoveCardFromDeck(int deckID, int cardID)
+        {
+            await _cardService.RemoveCardFromDeck(deckID, cardID);
+
+            return Ok();
+        }
+
         [HttpGet("decks")]
         [Authorize(Roles = "RegisteredUser")]
         public async Task<IActionResult> GetDecks()
@@ -144,8 +153,6 @@ namespace WyrdCodexAPI.Controllers
 
             return Ok(deck);
         }
-
-
 
     }
 }

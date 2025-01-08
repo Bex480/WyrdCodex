@@ -21,6 +21,8 @@ namespace WyrdCodexAPI.Data
         public DbSet<UserCard> UserCards { get; set; }
         public DbSet<UserDeck> UserDecks { get; set; }
         public DbSet<DeckCard> DeckCards { get; set; }
+        public DbSet<Cart> Carts { get; set; }
+        public DbSet<CartCard> CartCards { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -43,7 +45,7 @@ namespace WyrdCodexAPI.Data
             );
 
             modelBuilder.Entity<UserCard>()
-                .HasKey(uc => new { uc.UserId, uc.CardId });
+                .HasKey(uc => new { uc.Id });
 
             modelBuilder.Entity<UserCard>()
                 .HasOne(uc => uc.User)
@@ -69,7 +71,7 @@ namespace WyrdCodexAPI.Data
                 .HasForeignKey(ud => ud.DeckId);
 
             modelBuilder.Entity<DeckCard>()
-                .HasKey(dc => new { dc.DeckId, dc.CardId });
+                .HasKey(dc => new { dc.Id });
 
             modelBuilder.Entity<DeckCard>()
                 .HasOne(dc => dc.Deck)
@@ -80,6 +82,25 @@ namespace WyrdCodexAPI.Data
                 .HasOne(dc => dc.Card)
                 .WithMany(c => c.DeckCards)
                 .HasForeignKey(dc => dc.CardId);
+
+            modelBuilder.Entity<CartCard>()
+                .HasKey(cc => new { cc.CartId, cc.CardId });
+
+            modelBuilder.Entity<CartCard>()
+                .HasOne(cc => cc.Cart)
+                .WithMany(c => c.CartCards)
+                .HasForeignKey(cc => cc.CartId);
+
+            modelBuilder.Entity<CartCard>()
+                .HasOne(cc => cc.Card)
+                .WithMany(c => c.CartCards)
+                .HasForeignKey(cc => cc.CardId);
+
+            modelBuilder.Entity<Cart>()
+                .HasOne(c => c.User)
+                .WithOne(u => u.Cart)
+                .HasForeignKey<Cart>(c => c.UserId);
+               
         }
     }
 }

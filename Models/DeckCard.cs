@@ -1,7 +1,10 @@
-﻿namespace WyrdCodexAPI.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace WyrdCodexAPI.Models
 {
     public class DeckCard
     {
+        [Key]
         public int Id { get; set; }
 
 

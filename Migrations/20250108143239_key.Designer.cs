@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WyrdCodexAPI.Data;
@@ -11,9 +12,11 @@ using WyrdCodexAPI.Data;
 namespace WyrdCodexAPI.Migrations
 {
     [DbContext(typeof(WyrdCodexDbContext))]
-    partial class WyrdCodexDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250108143239_key")]
+    partial class key
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,46 +52,6 @@ namespace WyrdCodexAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Cards");
-                });
-
-            modelBuilder.Entity("WyrdCodexAPI.Models.Cart", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("Carts");
-                });
-
-            modelBuilder.Entity("WyrdCodexAPI.Models.CartCard", b =>
-                {
-                    b.Property<int>("CartId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("CardId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("integer");
-
-                    b.HasKey("CartId", "CardId");
-
-                    b.HasIndex("CardId");
-
-                    b.ToTable("CartCards");
                 });
 
             modelBuilder.Entity("WyrdCodexAPI.Models.Deck", b =>
@@ -326,36 +289,6 @@ namespace WyrdCodexAPI.Migrations
                     b.ToTable("UserRoles");
                 });
 
-            modelBuilder.Entity("WyrdCodexAPI.Models.Cart", b =>
-                {
-                    b.HasOne("WyrdCodexAPI.Models.User", "User")
-                        .WithOne("Cart")
-                        .HasForeignKey("WyrdCodexAPI.Models.Cart", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("WyrdCodexAPI.Models.CartCard", b =>
-                {
-                    b.HasOne("WyrdCodexAPI.Models.Card", "Card")
-                        .WithMany("CartCards")
-                        .HasForeignKey("CardId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WyrdCodexAPI.Models.Cart", "Cart")
-                        .WithMany("CartCards")
-                        .HasForeignKey("CartId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Card");
-
-                    b.Navigation("Cart");
-                });
-
             modelBuilder.Entity("WyrdCodexAPI.Models.DeckCard", b =>
                 {
                     b.HasOne("WyrdCodexAPI.Models.Card", "Card")
@@ -434,16 +367,9 @@ namespace WyrdCodexAPI.Migrations
 
             modelBuilder.Entity("WyrdCodexAPI.Models.Card", b =>
                 {
-                    b.Navigation("CartCards");
-
                     b.Navigation("DeckCards");
 
                     b.Navigation("UserCards");
-                });
-
-            modelBuilder.Entity("WyrdCodexAPI.Models.Cart", b =>
-                {
-                    b.Navigation("CartCards");
                 });
 
             modelBuilder.Entity("WyrdCodexAPI.Models.Deck", b =>
@@ -460,8 +386,6 @@ namespace WyrdCodexAPI.Migrations
 
             modelBuilder.Entity("WyrdCodexAPI.Models.User", b =>
                 {
-                    b.Navigation("Cart");
-
                     b.Navigation("UserCards");
 
                     b.Navigation("UserDecks");

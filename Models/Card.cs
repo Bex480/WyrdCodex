@@ -10,6 +10,7 @@
 
         public ICollection<UserCard>? UserCards { get; set; }
         public ICollection<DeckCard>? DeckCards { get; set; }
+        public ICollection<CartCard>? CartCards { get; set; }
 
     }
 }
