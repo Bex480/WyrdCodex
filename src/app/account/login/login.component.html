@@ -1,0 +1,21 @@
+<div class="backgroundRegister">
+
+	<div class="containerRegister" *ngIf="!loading">
+		<form class="formRegister" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+			<b>Log in to your account</b>
+			<div class="formGroupRow">
+				<label for="email">Email</label>
+				<input id="email" formControlName="email" [ngClass]="{'invalid': isInvalid('email')}"/>
+			</div>
+			<div class="formGroupRow">
+				<label for="password">Password</label>
+				<input id="password" formControlName="password" type="password" [ngClass]="{'invalid': isInvalid('password')}"/>
+			</div>
+
+			<button type="submit">Log in</button>
+		</form>
+
+	</div>
+
+	<app-loading-screen *ngIf="loading"></app-loading-screen>
+</div>

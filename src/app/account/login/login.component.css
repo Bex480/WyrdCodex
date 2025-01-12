@@ -1,0 +1,81 @@
+.backgroundRegister{
+	background: rgb(38, 38, 38);
+	height: 100vh;
+	width: 100vw;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.containerRegister{
+	border: 2px solid black;
+	background-color: antiquewhite;
+	color: black;
+	font-weight: bold;
+	border-radius: 15px;
+	width: 20%;
+	height: 30%;
+}
+
+.formRegister{
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	height: 100%;
+	width: 100%;
+}
+
+.formRegister b{
+	margin: 10px 0 15px 0;
+	font-size: 25px;
+}
+
+.formGroupRow{
+	display: flex;
+	justify-content: space-between;
+	margin-top: 30px;
+	font-size: 20px;
+	width: 90%;
+	height: 10%;
+}
+
+.formGroupRow label{
+	margin-right: 10px;
+	margin-top: 7px;
+}
+
+.formGroupRow input{
+	height: 30px;
+	width: 70%;
+	font-size: 20px;
+}
+
+
+.formRegister button{
+	width: 130px;
+	height: 45px;
+	margin-top: 40px;
+	background-color: #000;
+	color: antiquewhite;
+	border: 2px solid black;
+	border-radius: 8px;
+	padding: 12px 24px;
+	font-size: 16px;
+	font-weight: bold;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	cursor: pointer;
+	transition: all 0.3s ease;
+}
+
+.formRegister button:hover{
+	background-color: #f1c40f;
+	color: #000;
+	border-color: #000;
+	box-shadow: 0 6px 10px rgba(0, 0, 0, 0.5);
+}
+
+
+.invalid {
+	border: 2px solid red;
+}

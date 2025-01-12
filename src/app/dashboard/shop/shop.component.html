@@ -1,0 +1,94 @@
+<app-navigationbar></app-navigationbar>
+<router-outlet></router-outlet>
+<div class="shopBackground">
+	<div class="collectionSearchbarContainer">
+		<form class="collectionForm" [formGroup]="shopSearchForm" (ngSubmit)="onSubmit()">
+			<div class="collectionSearchRow">
+				<label>Card name:</label>
+				<input type="search" formControlName="card_name">
+			</div>
+			<div class="collectionSearchRow">
+				<label>Type:</label>
+				<select formControlName="type">
+					<option></option>
+					<option>Unit</option>
+					<option>Action</option>
+					<option>Legend</option>
+				</select>
+			</div>
+			<div class="collectionSearchRow">
+				<label>Faction:</label>
+				<select formControlName="faction">
+					<option></option>
+					<option>Nature</option>
+					<option>Crimson</option>
+					<option>Tundra</option>
+				</select>
+			</div>
+
+			<button id="clear" type="submit">Search</button>
+
+			<div class="advancedSearchContainer" (click)="this.showAdvanced = !this.showAdvanced;">
+				<div>Advanced search</div>
+				<span id="arrow" class="arrow" [class.down]="showAdvanced">➤</span>
+			</div>
+			<div class="advancedSearchBottom" *ngIf="this.showAdvanced">
+				<div class="collectionSearchRow" id="searchOne">
+					<label>Card Id:</label>
+					<input formControlName="CardID">
+				</div>
+				<div class="collectionSearchRow" id="searchTwo">
+					<label>Image URL:</label>
+					<input formControlName="image_url">
+				</div>
+			</div>
+		</form>
+	</div>
+	<div id="cardRow1">
+		<div class="cardSlot" *ngIf="this.responseGotten && cardNumber >= 1 && (cardCounter - 10 < cardNumber)"
+			 [ngClass]="{'clicked-border': divStates[0]}" (click)="toggleBorder2(0); showDetails(cardCounter-10+6);">
+			<img ngSrc="{{ allCards[cardCounter-10].imageUrl }}" alt="{{ allCards[cardCounter-10].cardName }}" style="position: relative; border-radius: 8px" fill>
+		</div>
+		<div class="cardSlot" *ngIf="this.responseGotten && cardNumber >= 2 && (cardCounter - 9 < cardNumber)"
+			 [ngClass]="{'clicked-border': divStates[1]}" (click)="toggleBorder2(1); showDetails(cardCounter-9+6)">
+			<img ngSrc="{{ allCards[cardCounter-9].imageUrl }}" alt="{{ allCards[cardCounter-9].cardName }}" style="position: relative; border-radius: 8px" fill>
+		</div>
+		<div class="cardSlot" *ngIf="this.responseGotten && cardNumber >= 3 && (cardCounter - 8 < cardNumber)"
+			 [ngClass]="{'clicked-border': divStates[2]}" (click)="toggleBorder2(2); showDetails(cardCounter-8+6)">
+			<img ngSrc="{{ allCards[cardCounter-8].imageUrl }}" alt="{{ allCards[cardCounter-8].cardName }}" style="position: relative; border-radius: 8px" fill>
+		</div>
+		<div class="cardSlot" *ngIf="this.responseGotten && cardNumber >= 4 && (cardCounter - 7 < cardNumber)"
+			 [ngClass]="{'clicked-border': divStates[3]}" (click)="toggleBorder2(3); showDetails(cardCounter-7+6)">
+			<img ngSrc="{{ allCards[cardCounter-7].imageUrl }}" alt="{{ allCards[cardCounter-7].cardName }}" style="position: relative; border-radius: 8px" fill>
+		</div>
+		<div class="cardSlot" *ngIf="this.responseGotten && cardNumber >= 5 && (cardCounter - 6 < cardNumber)"
+			 [ngClass]="{'clicked-border': divStates[4]}" (click)="toggleBorder2(4); showDetails(cardCounter-6+6)">
+			<img ngSrc="{{ allCards[cardCounter-6].imageUrl }}" alt="{{ allCards[cardCounter-6].cardName }}" style="position: relative; border-radius: 8px" fill>
+		</div>
+	</div>
+	<div id="cardRow2">
+		<div  class="cardSlot" *ngIf="this.responseGotten && cardNumber >= 6 && (cardCounter - 5 < cardNumber)"
+			  [ngClass]="{'clicked-border': divStates[5]}" (click)="toggleBorder2(5); showDetails(cardCounter-5+6)">
+			<img ngSrc="{{ allCards[cardCounter-5].imageUrl }}" alt="{{ allCards[cardCounter-5].cardName }}" style="position: relative; border-radius: 8px" fill>
+		</div>
+		<div  class="cardSlot" *ngIf="this.responseGotten && cardNumber >= 7 && (cardCounter - 4 < cardNumber)"
+			  [ngClass]="{'clicked-border': divStates[6]}" (click)="toggleBorder2(6); showDetails(cardCounter-4+6)">
+			<img ngSrc="{{ allCards[cardCounter-4].imageUrl }}" alt="{{ allCards[cardCounter-4].cardName }}" style="position: relative; border-radius: 8px" fill>
+		</div>
+		<div  class="cardSlot" *ngIf="this.responseGotten && cardNumber >= 8 && (cardCounter - 3 < cardNumber)"
+			  [ngClass]="{'clicked-border': divStates[7]}" (click)="toggleBorder2(7); showDetails(cardCounter-3+6)">
+			<img ngSrc="{{ allCards[cardCounter-3].imageUrl }}" alt="{{ allCards[cardCounter-3].cardName }}" style="position: relative; border-radius: 8px" fill>
+		</div>
+		<div  class="cardSlot" *ngIf="this.responseGotten && cardNumber >= 9 && (cardCounter - 2 < cardNumber)"
+			  [ngClass]="{'clicked-border': divStates[8]}" (click)="toggleBorder2(8); showDetails(cardCounter-2+6)">
+			<img ngSrc="{{ allCards[cardCounter-2].imageUrl }}" alt="{{ allCards[cardCounter-2].cardName }}" style="position: relative; border-radius: 8px" fill>
+		</div>
+		<div  class="cardSlot" *ngIf="this.responseGotten && cardNumber >= 10 && (cardCounter - 1 < cardNumber)"
+			  [ngClass]="{'clicked-border': divStates[9]}" (click)="toggleBorder2(9); showDetails(cardCounter-1+6)">
+			<img ngSrc="{{ allCards[cardCounter-1].imageUrl }}" alt="{{ allCards[cardCounter-1].cardName }}" style="position: relative; border-radius: 8px" fill>
+		</div>
+	</div>
+	<span class="newPageArrow" (click)="cycleForward()" *ngIf="this.cardCounter != 20 && cardNumber > 10">➤</span>
+	<span id="backArrow" class="newPageArrow" (click)="cycleBackward()" *ngIf="this.cardCounter != 10" >➤</span>
+</div>
+<app-card-details *ngIf="this.cardIsClicked"></app-card-details>
