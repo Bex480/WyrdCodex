@@ -19,6 +19,8 @@ export class NavigationbarComponent {
       email: ['', [Validators.required]],
       password: ['', [Validators.required]]
     })
+	  this.checkToken();
+
   }
 
   toggleDropdown(){
@@ -34,6 +36,18 @@ export class NavigationbarComponent {
         );
       }
     }
+  }
+
+  checkToken(): boolean{
+	if(localStorage.getItem('authToken')){
+		return true;
+	}
+	return false;
+  }
+
+  logOut(){
+	  localStorage.removeItem('authToken');
+	  localStorage.removeItem('refreshToken');
   }
 
   get email(){

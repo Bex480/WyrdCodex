@@ -8,16 +8,18 @@ import { LoadingScreenComponent } from './loading-screen/loading-screen.componen
 import { SuccessScreenComponent } from './success-screen/success-screen.component';
 import { CardDisplayComponent } from './card-display/card-display.component';
 import { AddCardFormComponent } from './add-card-form/add-card-form.component';
+import {CardDetailsComponent} from './card-details/card-details.component';
 
 
 @NgModule({
-  declarations: [
-    NavigationbarComponent,
-    LoadingScreenComponent,
-    SuccessScreenComponent,
-    CardDisplayComponent,
-    AddCardFormComponent
-  ],
+	declarations: [
+		NavigationbarComponent,
+		LoadingScreenComponent,
+		SuccessScreenComponent,
+		CardDisplayComponent,
+		AddCardFormComponent,
+		CardDetailsComponent
+	],
     imports: [
         CommonModule,
         SharedRoutingModule,
@@ -29,7 +31,8 @@ import { AddCardFormComponent } from './add-card-form/add-card-form.component';
 		LoadingScreenComponent,
 		SuccessScreenComponent,
 		CardDisplayComponent,
-		AddCardFormComponent
+		AddCardFormComponent,
+		CardDetailsComponent
 	]
 })
 export class SharedModule { }

@@ -1,43 +1,33 @@
 <div class="headerNavigation">
-  <img src="/naturePicture.png" alt="image" class="logo">
-  <div class="appName">Wyrd Codex</div>
-  <div class="navigationContainer">
-    <div class="navigationButton">Home</div>
-    <div class="navigationButton">Metagame</div>
-    <div class="navigationButton">Collection</div>
-    <div class="navigationButton">News</div>
-    <div class="navigationButton">Shop</div>
-  </div>
-  <div class="navigationIconContainer">
-    <svg width="10%" height="50%" viewBox="-25 -25 50 50" class="SVGIcons">
-      <g>
-        <path d="M 5 5, L 17 17" />
-        <circle cx="-5" cy="-5" r="13" />
-      </g>
-    </svg>
-    <svg width="10%" height="50%" viewBox="-25 -25 50 50" class="SVGIcons" (click)="toggleDropdown()">
-      <g>
-        <circle cx="0" cy="0" r="24" />
-        <circle cx="0" cy="-10" r="9" />
-        <path d="M -15 15, Q 0 -10, 15 15" />
-      </g>
-    </svg>
-    <div class="dropdown" *ngIf="isDropdownVisible">
-      <form class="formRegister" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-        <div class="loginFormRow">
-          <label for="email">E-mail</label>
-          <input id="email" formControlName="email"/>
-        </div>
-        <div class="loginFormRow">
-          <label for="password">Password</label>
-          <input id="password" formControlName="password"/>
-        </div>
-        <div class="loginFormRow">
-          <button type="submit">Log in</button>
-          <a routerLink="/account/register" style="position: absolute; right: 15%">Register?</a>
-        </div>
-      </form>
-    </div>
-  </div>
+	<img src="/naturePicture.png" alt="image" class="logo"  routerLink="/dashboard">
+	<div class="appName" routerLink="/dashboard">Wyrd Codex</div>
+	<div class="navigationContainer">
+		<div class="navigationButton" routerLink="/dashboard">Home</div>
+		<div class="navigationButton">Metagame</div>
+		<div class="navigationButton" routerLink="/dashboard/collection">Collection</div>
+		<div class="navigationButton">News</div>
+		<div class="navigationButton" routerLink="/dashboard/shop">Shop</div>
+	</div>
+	<div class="navigationIconContainer">
+		<svg routerLink="/account/profile" width="10%" height="50%" viewBox="-25 -25 50 50" class="SVGIcons">
+			<g>
+				<path d="M 5 5, L 17 17" />
+				<circle cx="-5" cy="-5" r="13" />
+			</g>
+		</svg>
+		<svg width="10%" height="50%" viewBox="-25 -25 50 50" class="SVGIcons" (click)="toggleDropdown()">
+			<g>
+				<circle cx="0" cy="0" r="24" />
+				<circle cx="0" cy="-10" r="9" />
+				<path d="M -15 15, Q 0 -10, 15 15" />
+			</g>
+		</svg>
+		<div class="dropdown" *ngIf="isDropdownVisible">
+			<button routerLink="/account/login" *ngIf="!checkToken()">Login</button>
+			<button routerLink="/account/register" *ngIf="!checkToken()">Register</button>
+			<button routerLink="/account/profile" *ngIf="checkToken()">Profile</button>
+			<button routerLink="/dashboard" *ngIf="checkToken()" (click)="logOut()">Log out</button>
+		</div>
+	</div>
 </div>
 <router-outlet></router-outlet>
