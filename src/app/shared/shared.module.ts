@@ -7,6 +7,7 @@ import {ReactiveFormsModule} from "@angular/forms";
 import { LoadingScreenComponent } from './loading-screen/loading-screen.component';
 import { SuccessScreenComponent } from './success-screen/success-screen.component';
 import { CardDisplayComponent } from './card-display/card-display.component';
+import { AddCardFormComponent } from './add-card-form/add-card-form.component';
 
 
 @NgModule({
@@ -14,7 +15,8 @@ import { CardDisplayComponent } from './card-display/card-display.component';
     NavigationbarComponent,
     LoadingScreenComponent,
     SuccessScreenComponent,
-    CardDisplayComponent
+    CardDisplayComponent,
+    AddCardFormComponent
   ],
     imports: [
         CommonModule,
@@ -26,7 +28,8 @@ import { CardDisplayComponent } from './card-display/card-display.component';
 		NavigationbarComponent,
 		LoadingScreenComponent,
 		SuccessScreenComponent,
-		CardDisplayComponent
+		CardDisplayComponent,
+		AddCardFormComponent
 	]
 })
 export class SharedModule { }
