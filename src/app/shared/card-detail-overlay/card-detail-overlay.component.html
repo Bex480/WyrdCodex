@@ -1,0 +1,16 @@
+<div class="overlay" *ngIf="card">
+	<div class="overlay-content">
+		<button class="close-button" (click)="closeOverlay()">X</button>
+		<div class="card-details">
+			<h2>{{ card.cardName }}</h2>
+			<img ngSrc="{{card.imageUrl}}" alt="{{ card.cardName }}" [width]="225" [height]="300">
+			<p>{{ card.faction }}	{{ card.type }}</p>
+
+			<div class="actionButtons">
+				<button id="updateBtn">Update</button>
+				<button id="deleteBtn">Delete</button>
+			</div>
+		</div>
+	</div>
+</div>
+

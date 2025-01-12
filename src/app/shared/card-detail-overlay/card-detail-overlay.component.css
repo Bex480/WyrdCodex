@@ -1,57 +1,62 @@
-.mainContainer{
-	display: flex;
-	justify-content: center;
-	flex-direction: column;
-	background-color: #212121;
-	height: 100vh;
+/* Fullscreen overlay */
+.overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
 	width: 100vw;
-}
-
-.mainContainer app-card-grid {
-	height: 500px;
-	width: 100%;
-	overflow-y: scroll;
-	overflow-x: hidden;
-}
-
-.mainContainer app-card-grid::-webkit-scrollbar {
-	display: none;
-}
-
-.contentAdmin {
+	height: 100vh;
+	background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
 	display: flex;
-	flex-direction: row;
+	justify-content: center;
 	align-items: center;
-
+	z-index: 1000;
 }
 
-.buttonMenu {
+/* Overlay content (the card details) */
+.overlay-content {
+	background-color: #212121;
+	border-radius: 10px;
+	position: relative;
+	width: 90%;
+	max-width: 400px;
+	color: white;
+}
+
+.close-button {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	border: none;
+	font-size: 20px;
+	cursor: pointer;
+	background-color: snow;
+	color: #212121;
+	padding: 5px 10px;
+}
+
+.card-details {
+	text-align: center;
+}
+
+.actionButtons {
 	display: flex;
-	flex-direction: column;
-	padding: 25px;
-	margin-left: 50px;
 	justify-content: center;
-	min-width: 200px;
-	border-radius: 30px;
-	background: #212121;
-	box-shadow: 15px 15px 30px rgb(25, 25, 25),
-	-15px -15px 30px rgb(60, 60, 60);
+	align-items: center;
+	flex-direction: row;
 }
 
-.gridContainer {
-	display: flex;
-	justify-content: center;
-	width: 500px;
-	height: 500px;
+#updateBtn {
+	background-color: lightblue;
+	padding: 10px 20px;
 }
 
-.optionsMenu {
-
+#deleteBtn {
+	background-color: lightcoral;
+	padding: 10px 20px;
 }
 
 button {
 	margin-bottom: 15px;
-	padding: 15px 25px;
 	border: unset;
 	border-radius: 15px;
 	color: #212121;

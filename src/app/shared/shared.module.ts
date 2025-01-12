@@ -9,6 +9,8 @@ import { SuccessScreenComponent } from './success-screen/success-screen.componen
 import { CardDisplayComponent } from './card-display/card-display.component';
 import { AddCardFormComponent } from './add-card-form/add-card-form.component';
 import {CardDetailsComponent} from './card-details/card-details.component';
+import { CardGridComponent } from './card-grid/card-grid.component';
+import { CardDetailOverlayComponent } from './card-detail-overlay/card-detail-overlay.component';
 
 
 @NgModule({
@@ -18,7 +20,9 @@ import {CardDetailsComponent} from './card-details/card-details.component';
 		SuccessScreenComponent,
 		CardDisplayComponent,
 		AddCardFormComponent,
-		CardDetailsComponent
+		CardDetailsComponent,
+  CardGridComponent,
+  CardDetailOverlayComponent
 	],
     imports: [
         CommonModule,
@@ -32,7 +36,8 @@ import {CardDetailsComponent} from './card-details/card-details.component';
 		SuccessScreenComponent,
 		CardDisplayComponent,
 		AddCardFormComponent,
-		CardDetailsComponent
+		CardDetailsComponent,
+		CardGridComponent
 	]
 })
 export class SharedModule { }

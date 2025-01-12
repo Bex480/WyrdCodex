@@ -12,7 +12,7 @@ export class CardService {
 	constructor(private http: HttpClient) {}
 
 	getCards(): Observable<Card[]> {
-		return this.http.get<Card[]>(`${ApiConfig.apiUrl}/Card/All`);
+		return this.http.get<Card[]>(`${ApiConfig.apiUrl}/Card/shop`);
 	}
 
 	getCardById(id: number): Observable<Card> {
