@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Supabase.Interfaces;
 using System.Security.Claims;
 using WyrdCodexAPI.Data;
+using WyrdCodexAPI.Models;
 using WyrdCodexAPI.Models.DTOs.Card;
 using WyrdCodexAPI.Services;
 
@@ -76,6 +77,8 @@ namespace WyrdCodexAPI.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateCard(int cardID, CardDTO cardDTO)
         {
+
+
             await _cardService.UpdateCard(cardID, cardDTO);
             return Ok();
         }
@@ -154,5 +157,14 @@ namespace WyrdCodexAPI.Controllers
             return Ok(deck);
         }
 
+
+        [HttpDelete("deck")]
+        [Authorize(Roles = "RegisteredUser")]
+        public async Task<IActionResult> DeleteDeckWithID(int deckID)
+        {
+            await _cardService.DeleteDeck(deckID);
+
+            return Ok();
+        }
     }
 }

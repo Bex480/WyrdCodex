@@ -15,11 +15,13 @@ namespace WyrdCodexAPI.Services
     {
         private readonly Supabase.Client _supabase;
         private readonly WyrdCodexDbContext _context;
+        private readonly AuthService _authService;
 
-        public CardService(Supabase.Client supabase, WyrdCodexDbContext context)
+        public CardService(Supabase.Client supabase, WyrdCodexDbContext context, AuthService authService)
         {
             _supabase = supabase;
             _context = context;
+            _authService = authService;
         }
 
         public async Task<Card?> GetCardByID(int id)
@@ -31,7 +33,7 @@ namespace WyrdCodexAPI.Services
 
         public async Task<List<Card>> GetCardsByIDs(List<int> ids)
         {
-            var cards = await _context.Cards.Join( ids,
+            var cards = await _context.Cards.Join(ids,
                                              c => c.Id,
                                              id => id,
                                              (c, id) => c)
@@ -72,7 +74,7 @@ namespace WyrdCodexAPI.Services
 
             var filteredCards = allCards.AsQueryable();
 
-            if (!string.IsNullOrEmpty(cardName)) { filteredCards = filteredCards.Where(c => c.CardName.Contains(cardName, StringComparison.OrdinalIgnoreCase));}
+            if (!string.IsNullOrEmpty(cardName)) { filteredCards = filteredCards.Where(c => c.CardName.Contains(cardName, StringComparison.OrdinalIgnoreCase)); }
 
             if (!string.IsNullOrEmpty(type)) { filteredCards = filteredCards.Where(c => c.Type.Equals(type, StringComparison.OrdinalIgnoreCase)); }
 
@@ -87,9 +89,11 @@ namespace WyrdCodexAPI.Services
             await deckCoverImage.CopyToAsync(memoryStream);
             var imageBytes = memoryStream.ToArray();
 
-            await _supabase.Storage.From("deck_covers").Upload(imageBytes, $"public/{deckCoverImage.FileName}");
+            var cyph = _authService.GeneratePassword(5);
 
-            var imageUrl = _supabase.Storage.From("deck_covers").GetPublicUrl($"public/{deckCoverImage.FileName}");
+            await _supabase.Storage.From("deck_covers").Upload(imageBytes, $"public/{cyph + deckCoverImage.FileName}");
+
+            var imageUrl = _supabase.Storage.From("deck_covers").GetPublicUrl($"public/{cyph + deckCoverImage.FileName}");
 
             var newDeck = new Deck
             {
@@ -115,9 +119,11 @@ namespace WyrdCodexAPI.Services
             await cardDTO.Image.CopyToAsync(memoryStream);
             var imageBytes = memoryStream.ToArray();
 
-            await _supabase.Storage.From("cards").Upload(imageBytes, $"{cardDTO.Faction}/{cardDTO.Type}/{cardDTO.Image.FileName}");
+            var cyph = _authService.GeneratePassword(5);
 
-            var imageUrl = _supabase.Storage.From("cards").GetPublicUrl($"{cardDTO.Faction}/{cardDTO.Type}/{cardDTO.Image.FileName}");
+            await _supabase.Storage.From("cards").Upload(imageBytes, $"{cardDTO.Faction}/{cardDTO.Type}/{cyph + cardDTO.Image.FileName}");
+
+            var imageUrl = _supabase.Storage.From("cards").GetPublicUrl($"{cardDTO.Faction}/{cardDTO.Type}/{cyph + cardDTO.Image.FileName}");
 
             var newCard = new Card
             {
@@ -145,21 +151,28 @@ namespace WyrdCodexAPI.Services
             var existingCard = await _context.Cards.FindAsync(CardId);
             if (existingCard == null) { return; }
 
-            using var memoryStream = new MemoryStream();
-            await updatedCard.Image.CopyToAsync(memoryStream);
-            var imageBytes = memoryStream.ToArray();
+            var imageUrl = existingCard.ImageUrl;
 
-            await _supabase.Storage.From("cards").Move($"{existingCard.Faction}/{existingCard.Type}/{Path.GetFileName(existingCard.ImageUrl)}",
-                                                       $"Archive/{existingCard.Faction}/{existingCard.Type}/{Path.GetFileName(existingCard.ImageUrl)}");
+            if (updatedCard.Image != null)
+            {
+                using var memoryStream = new MemoryStream();
+                await updatedCard.Image.CopyToAsync(memoryStream);
+                var imageBytes = memoryStream.ToArray();
 
-            await _supabase.Storage.From("cards").Upload(imageBytes, $"{updatedCard.Faction}/{updatedCard.Type}/{updatedCard.Image.FileName}");
+                await _supabase.Storage.From("cards").Move($"{existingCard.Faction}/{existingCard.Type}/{Path.GetFileName(existingCard.ImageUrl)}",
+                                                           $"Archive/{existingCard.Faction}/{existingCard.Type}/{Path.GetFileName(existingCard.ImageUrl)}");
 
-            var newImageUrl = _supabase.Storage.From("cards").GetPublicUrl($"{updatedCard.Faction}/{updatedCard.Type}/{updatedCard.Image.FileName}");
+                var cyph = _authService.GeneratePassword(5);
+
+                await _supabase.Storage.From("cards").Upload(imageBytes, $"{updatedCard.Faction}/{updatedCard.Type}/{cyph + updatedCard.Image.FileName}");
+
+                imageUrl = _supabase.Storage.From("cards").GetPublicUrl($"{updatedCard.Faction}/{updatedCard.Type}/{cyph + updatedCard.Image.FileName}");
+            }
 
             existingCard.CardName = updatedCard.CardName;
             existingCard.Type = updatedCard.Type;
             existingCard.Faction = updatedCard.Faction;
-            existingCard.ImageUrl = newImageUrl;
+            existingCard.ImageUrl = imageUrl;
 
             _context.Cards.Update(existingCard);
             await _context.SaveChangesAsync();
@@ -204,6 +217,16 @@ namespace WyrdCodexAPI.Services
             var cards = await _context.DeckCards.Where(dc => dc.DeckId == DeckId).Select(dc => dc.Card).ToListAsync();
 
             return new DeckDTO() { Deck = deck, Cards = cards };
+        }
+
+        public async Task DeleteDeck(int DeckId)
+        {
+            var deck = await _context.Decks.FindAsync(DeckId);
+            if (deck == null) { return; }
+
+            _context.Decks.Remove(deck);
+
+            await _context.SaveChangesAsync();
         }
     }
 }

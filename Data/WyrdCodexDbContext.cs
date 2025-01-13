@@ -50,12 +50,14 @@ namespace WyrdCodexAPI.Data
             modelBuilder.Entity<UserCard>()
                 .HasOne(uc => uc.User)
                 .WithMany(u => u.UserCards)
-                .HasForeignKey(uc => uc.UserId);
+                .HasForeignKey(uc => uc.UserId)
+                .OnDelete(DeleteBehavior.Cascade); 
 
             modelBuilder.Entity<UserCard>()
                 .HasOne(uc => uc.Card)
                 .WithMany(c => c.UserCards)
-                .HasForeignKey(uc => uc.CardId);
+                .HasForeignKey(uc => uc.CardId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<UserDeck>()
                 .HasKey(ud => new { ud.UserId, ud.DeckId });
@@ -63,12 +65,14 @@ namespace WyrdCodexAPI.Data
             modelBuilder.Entity<UserDeck>()
                 .HasOne(ud => ud.User)
                 .WithMany(u => u.UserDecks)
-                .HasForeignKey(ud => ud.UserId);
+                .HasForeignKey(ud => ud.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<UserDeck>()
                 .HasOne(ud => ud.Deck)
                 .WithMany(d => d.UserDecks)
-                .HasForeignKey(ud => ud.DeckId);
+                .HasForeignKey(ud => ud.DeckId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<DeckCard>()
                 .HasKey(dc => new { dc.Id });
@@ -76,12 +80,14 @@ namespace WyrdCodexAPI.Data
             modelBuilder.Entity<DeckCard>()
                 .HasOne(dc => dc.Deck)
                 .WithMany(d => d.DeckCards)
-                .HasForeignKey(dc => dc.DeckId);
+                .HasForeignKey(dc => dc.DeckId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<DeckCard>()
                 .HasOne(dc => dc.Card)
                 .WithMany(c => c.DeckCards)
-                .HasForeignKey(dc => dc.CardId);
+                .HasForeignKey(dc => dc.CardId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<CartCard>()
                 .HasKey(cc => new { cc.CartId, cc.CardId });
@@ -89,17 +95,20 @@ namespace WyrdCodexAPI.Data
             modelBuilder.Entity<CartCard>()
                 .HasOne(cc => cc.Cart)
                 .WithMany(c => c.CartCards)
-                .HasForeignKey(cc => cc.CartId);
+                .HasForeignKey(cc => cc.CartId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<CartCard>()
                 .HasOne(cc => cc.Card)
                 .WithMany(c => c.CartCards)
-                .HasForeignKey(cc => cc.CardId);
+                .HasForeignKey(cc => cc.CardId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Cart>()
                 .HasOne(c => c.User)
                 .WithOne(u => u.Cart)
-                .HasForeignKey<Cart>(c => c.UserId);
+                .HasForeignKey<Cart>(c => c.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
                
         }
     }

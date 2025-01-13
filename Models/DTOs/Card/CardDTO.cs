@@ -5,6 +5,6 @@
         public required string CardName { get; set; }
         public required string Type { get; set; }
         public required string Faction { get; set; }
-        public required IFormFile Image { get; set; }
+        public IFormFile? Image { get; set; }
     }
 }
