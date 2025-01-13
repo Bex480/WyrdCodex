@@ -1,13 +1,37 @@
-<div class="card-grid" *ngIf="!loading">
-	<app-card-display *ngFor="let card of cards"
-					  [card]="card"
-					  (dblclick)="onCardDoubleClick(card)"
-					  ></app-card-display>
+
+<form [formGroup]="filterForm">
+	<div class="filterForm">
+		<div class="input-group">
+			<input type="text" formControlName="cardName" class="input" placeholder="Card Name">
+		</div>
+		<select formControlName="cardType">
+			<option value="" disabled>Select Card Type</option>
+			<option value="Unit">Unit</option>
+			<option value="Action">Action</option>
+			<option value="Legend">Legend</option>
+		</select>
+		<select formControlName="cardFaction">
+			<option value="" disabled>Select Card Faction</option>
+			<option value="Nature">Nature</option>
+			<option value="Crimson">Crimson</option>
+			<option value="Myridian">Myridian</option>
+		</select>
+	</div>
+</form>
+
+<div *ngIf="!loading">
+	<div class="card-grid">
+		<app-card-display *ngFor="let card of cards"
+						  [card]="card"
+						  (dblclick)="onCardDoubleClick(card)">
+		</app-card-display>
+	</div>
 </div>
 
 <app-card-detail-overlay *ngIf="selectedCard" [card]="selectedCard"
 						 (updateCard)="onCardUpdate($event)"
 						 (reloadGrid)="Reload()"></app-card-detail-overlay>
+
 
 <div class="loadingScreenContainer" *ngIf="loading">
 	<app-loading-screen></app-loading-screen>
