@@ -18,6 +18,12 @@
 	display: none;
 }
 
+.viewMenu {
+	display: flex;
+	width: 100%;
+	justify-content: center;
+}
+
 .contentAdmin {
 	display: flex;
 	flex-direction: row;

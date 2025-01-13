@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {HttpClient} from '@angular/common/http';
 import {ApiConfig} from '../../config/api.config';
+import {Card} from '../../models/card.model';
 
 @Component({
   selector: 'app-add-card-form',

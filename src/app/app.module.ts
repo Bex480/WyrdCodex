@@ -3,7 +3,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ReactiveFormsModule} from '@angular/forms';
-import {HttpClientModule, provideHttpClient, withFetch} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule, provideHttpClient, withFetch} from '@angular/common/http';
+import {AuthInterceptor} from './services/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import {HttpClientModule, provideHttpClient, withFetch} from '@angular/common/ht
     provideHttpClient(
       withFetch(),
     ),
+	  { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
   ],
   exports: [
   ],

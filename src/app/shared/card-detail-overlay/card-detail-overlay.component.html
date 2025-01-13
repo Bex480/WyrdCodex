@@ -7,8 +7,8 @@
 			<p>{{ card.faction }}	{{ card.type }}</p>
 
 			<div class="actionButtons">
-				<button id="updateBtn">Update</button>
-				<button id="deleteBtn">Delete</button>
+				<button id="updateBtn" (click)="onUpdateClick()">Update</button>
+				<button id="deleteBtn" (click)="onDeleteClick()">Delete</button>
 			</div>
 		</div>
 	</div>

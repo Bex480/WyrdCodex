@@ -5,7 +5,9 @@
 					  ></app-card-display>
 </div>
 
-<app-card-detail-overlay *ngIf="selectedCard" [card]="selectedCard"></app-card-detail-overlay>
+<app-card-detail-overlay *ngIf="selectedCard" [card]="selectedCard"
+						 (updateCard)="onCardUpdate($event)"
+						 (reloadGrid)="Reload()"></app-card-detail-overlay>
 
 <div class="loadingScreenContainer" *ngIf="loading">
 	<app-loading-screen></app-loading-screen>

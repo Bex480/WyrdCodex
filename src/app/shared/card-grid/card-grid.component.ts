@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {CardService} from '../../services/card.service';
 import {Card} from '../../models/card.model';
 
@@ -13,6 +13,7 @@ export class CardGridComponent implements OnInit {
 	cards: Card[] = [];
 	loading: boolean = true;
 	selectedCard?: Card;
+	@Output() cardUpdate = new EventEmitter<Card>();
 
 	constructor(private cardService: CardService) {}
 
@@ -27,4 +28,14 @@ export class CardGridComponent implements OnInit {
 		this.selectedCard = card;
 	}
 
+	onCardUpdate(card: Card) {
+		this.cardUpdate.emit(card);
+	}
+
+	Reload() {
+		this.cardService.getCards().subscribe((data: Card[]) => {
+			this.cards = data;
+			this.loading = false;
+		});
+	}
 }

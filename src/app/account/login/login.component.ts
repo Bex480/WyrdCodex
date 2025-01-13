@@ -40,8 +40,9 @@ export class LoginComponent {
 							this.router.navigate(['/account/two-factor'], { queryParams: { email: formData.email } });
 						} else if (response.status === 200) {
 							const token = response.body.token;
+							const refToken = response.body.refreshToken;
 							localStorage.setItem('authToken', token);
-							console.log('Token stored:', token);
+							localStorage.setItem('refToken', refToken)
 
 							this.router.navigate(['/dashboard']);
 						}
