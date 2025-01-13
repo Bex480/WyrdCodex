@@ -47,7 +47,8 @@ builder.Services.AddCors(options =>
         policy.WithOrigins("http://localhost:4200")
               .AllowAnyHeader()
               .AllowAnyMethod()
-              .AllowCredentials();
+              .AllowCredentials()
+              .WithExposedHeaders("Authorization");
     });
 });
 
@@ -103,10 +104,9 @@ var app = builder.Build();
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
+app.UseCors("AllowLocalhost");
 app.UseAuthorization();
 
 app.MapControllers();
-
-app.UseCors("AllowLocalhost");
 
 app.Run();

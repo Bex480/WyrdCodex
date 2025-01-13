@@ -36,6 +36,7 @@ namespace WyrdCodexAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "RegisteredUser")]
         public async Task<IActionResult> CreateCard(CardDTO cardDTO)
         {
             await _cardService.InsertCard(cardDTO);
@@ -74,6 +75,7 @@ namespace WyrdCodexAPI.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "RegisteredUser")]
         public async Task<IActionResult> UpdateCard(int cardID, CardDTO cardDTO)
         {
             await _cardService.UpdateCard(cardID, cardDTO);
@@ -81,6 +83,7 @@ namespace WyrdCodexAPI.Controllers
         }
 
         [HttpDelete]
+        [Authorize(Roles = "RegisteredUser")]
         public async Task<IActionResult> DeleteCard(int cardID)
         {
             var card = await _cardService.GetCardByID(cardID);
