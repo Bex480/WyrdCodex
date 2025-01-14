@@ -76,5 +76,41 @@ namespace WyrdCodexAPI.Services
 
             await _context.SaveChangesAsync();
         }
+
+        public async Task AddToSaveForLater(User user, int CardId, int Quantity)
+        { 
+            var existingCard = await _context.SavedForLater.FirstOrDefaultAsync(sfl => sfl.CardId == CardId);
+            if (existingCard != null)
+            {
+                existingCard.Quantity += Quantity;
+                await _context.SaveChangesAsync();
+                return;
+            }
+
+            _context.SavedForLater.Add(new SaveForLater() { UserId = user.Id, CardId = CardId, Quantity = Quantity });
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task RemoveFromSaveForLater(User user, int CardId)
+        {
+            var entry = await _context.SavedForLater.FirstOrDefaultAsync(sfl => sfl.UserId == user.Id && sfl.CardId == CardId);
+            if (entry == null) { return; }
+
+            _context.SavedForLater.Remove(entry);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<CardWithQuantityDTO>> GetCardsSavedForLater(User user)
+        {
+            var savedCards = await _context.SavedForLater
+                .Where(sfl => sfl.UserId == user.Id)
+                .Select(sfl => new CardWithQuantityDTO() { Card = sfl.Card, Quantity = sfl.Quantity })
+                .ToListAsync();
+            if (savedCards == null) { return []; }
+
+            return savedCards;
+        }
     }
 }

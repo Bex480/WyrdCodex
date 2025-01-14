@@ -86,5 +86,50 @@ namespace WyrdCodexAPI.Controllers
             return Ok();
         }
 
+        [HttpPost("add_to_save_for_later")]
+        [Authorize(Roles = "RegisteredUser")]
+        public async Task<IActionResult> AddToSaveForLater(int cardID)
+        {
+            var user = await GetCurrentUser();
+            if (user == null) { return Unauthorized(); }
+
+            var cart = await _shoppingService.GetOrCreateCart(user);
+
+            var card = cart.Cards.FirstOrDefault(c => c.Card.Id == cardID);
+            if (card == null) { return Unauthorized(); }
+
+            if (card != null) 
+            { 
+                await _shoppingService.AddToSaveForLater(user, cardID, card.Quantity);
+                await _shoppingService.RemoveCardFromCart(cart.CartId, cardID);
+            }
+
+            return Ok();
+        }
+
+        [HttpDelete("remove_from_save_for_later")]
+        [Authorize(Roles = "RegisteredUser")]
+        public async Task<IActionResult> RemoveFromSaveForLater(int cardID)
+        {
+            var user = await GetCurrentUser();
+            if (user == null) { return Unauthorized(); }
+
+            await _shoppingService.RemoveFromSaveForLater(user, cardID);
+
+            return Ok();
+        }
+
+        [HttpGet("saved_for_later")]
+        [Authorize(Roles = "RegisteredUser")]
+        public async Task<IActionResult> GetCardsSavedForLater()
+        {
+            var user = await GetCurrentUser();
+            if (user == null) { return Unauthorized(); }
+
+            var cards = await _shoppingService.GetCardsSavedForLater(user);
+
+            return Ok(cards);
+        }
+
     }
 }

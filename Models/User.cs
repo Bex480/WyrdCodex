@@ -15,5 +15,7 @@ namespace WyrdCodexAPI.Models
         public ICollection<UserCard>? UserCards { get; set; }
         public ICollection<UserDeck>? UserDecks { get; set; }
         [JsonIgnore] public Cart? Cart { get; set; }
+        public ICollection<SaveForLater>? SavedForLater { get; set; }
+
     }
 }

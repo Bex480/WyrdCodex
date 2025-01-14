@@ -23,6 +23,7 @@ namespace WyrdCodexAPI.Data
         public DbSet<DeckCard> DeckCards { get; set; }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartCard> CartCards { get; set; }
+        public DbSet<SaveForLater> SavedForLater { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -109,7 +110,22 @@ namespace WyrdCodexAPI.Data
                 .WithOne(u => u.Cart)
                 .HasForeignKey<Cart>(c => c.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
-               
+
+            modelBuilder.Entity<SaveForLater>()
+                .HasKey(sfl => new { sfl.UserId, sfl.CardId });
+
+            modelBuilder.Entity<SaveForLater>()
+                .HasOne(sfl => sfl.User)
+                .WithMany(u => u.SavedForLater)
+                .HasForeignKey(sfl => sfl.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<SaveForLater>()
+                .HasOne(sfl => sfl.Card)
+                .WithMany(c => c.SavedForLater)
+                .HasForeignKey(sfl => sfl.CardId)
+                .OnDelete(DeleteBehavior.Cascade);
+
         }
     }
 }
