@@ -1,0 +1,36 @@
+<div class="mainContainer" *ngIf="!loading && !success">
+	<app-back-button route="/dashboard"></app-back-button>
+
+	<div class="checkoutContainer">
+		<app-cart style="max-height: 250px"></app-cart>
+
+		<div>
+			<input type="text" class="input" placeholder="Full Name" required>
+			<input type="text" class="input" placeholder="0000 0000 0000 0000" required>
+
+			<div style="display: flex; flex-direction: row">
+				<input type="text" class="input" placeholder="Expiry date: 06/25" required>
+				<input type="text" class="input" placeholder="CVV" required>
+			</div>
+		</div>
+
+		<button (click)="onCheckout()">Checkout</button>
+	</div>
+
+	<div class="savedForLaterButton" (click)="goToSavedForLater()">
+		<img ngSrc="https://img.icons8.com/?size=100&id=MsXLF6DrtERg&format=png&color=000000"
+			 alt="saved"
+			 [width]="30"
+			 [height]="30"
+		>
+	</div>
+</div>
+
+<div class="mainContainer"  *ngIf="loading">
+	<app-loading-screen></app-loading-screen>
+</div>
+
+<div class="mainContainer" *ngIf="success">
+	<app-success-screen route="/dashboard/collection" buttonText="Collection"></app-success-screen>
+</div>
+

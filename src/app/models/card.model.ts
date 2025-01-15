@@ -4,4 +4,5 @@ export interface Card {
 	type: string;
 	faction: string;
 	imageUrl: string;
+	price: number;
 }

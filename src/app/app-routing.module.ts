@@ -15,6 +15,10 @@ const routes: Routes = [
 		loadChildren: ()=>import('./admin/admin.module').then(m=>m.AdminModule)
 	},
 	{
+		path: 'checkout',
+		loadChildren: ()=>import('./checkout/checkout.module').then(m=>m.CheckoutModule)
+	},
+	{
 		path: '**',
 		loadChildren: () => import('./dashboard/dashboard.module').then(m=>m.DashboardModule)
 	}

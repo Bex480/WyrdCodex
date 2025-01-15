@@ -10,6 +10,7 @@ import { CardDisplayComponent } from './card-display/card-display.component';
 import {CardDetailsComponent} from './card-details/card-details.component';
 import { CardGridComponent } from './card-grid/card-grid.component';
 import { CardDetailOverlayComponent } from './card-detail-overlay/card-detail-overlay.component';
+import { BackButtonComponent } from './back-button/back-button.component';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import { CardDetailOverlayComponent } from './card-detail-overlay/card-detail-ov
 		CardDisplayComponent,
 		CardDetailsComponent,
   CardGridComponent,
-  CardDetailOverlayComponent
+  CardDetailOverlayComponent,
+  BackButtonComponent
 	],
     imports: [
         CommonModule,
@@ -34,7 +36,8 @@ import { CardDetailOverlayComponent } from './card-detail-overlay/card-detail-ov
 		SuccessScreenComponent,
 		CardDisplayComponent,
 		CardDetailsComponent,
-		CardGridComponent
+		CardGridComponent,
+		BackButtonComponent
 	]
 })
 export class SharedModule { }

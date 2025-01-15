@@ -1,0 +1,25 @@
+.mainContainer {
+	background-color: #212121;
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+
+app-cart {
+	align-self: center;
+	justify-self: center;
+	max-height: 600px;
+	min-height: 600px;
+	min-width: 800px;
+}
+
+.savedForLaterTitle {
+	color: white;
+	font-size: larger;
+	font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+	font-weight: bolder;
+	margin-bottom: 50px;
+}
