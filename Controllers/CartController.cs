@@ -44,7 +44,7 @@ namespace WyrdCodexAPI.Controllers
             return Ok(cart.Cards);
         }
 
-        [HttpPost("add_card")]
+        [HttpPost("card/add")]
         [Authorize(Roles = "RegisteredUser")]
         public async Task<IActionResult> AddToCart(int cardID)
         {
@@ -58,7 +58,21 @@ namespace WyrdCodexAPI.Controllers
             return Ok();
         }
 
-        [HttpPut("change_card_quantity")]
+        [HttpPut("card/quantity/decrease")]
+        [Authorize(Roles = "RegisteredUser")]
+        public async Task<IActionResult> DecreaseQuantity(int cardID)
+        {
+            var user = await GetCurrentUser();
+            if (user == null) { return Unauthorized(); }
+
+            var cart = await _shoppingService.GetOrCreateCart(user);
+
+            await _shoppingService.DecreaseQuantityOfCardInCart(cart.CartId, cardID);
+
+            return Ok();
+        }
+
+        [HttpPut("card/quantity/set")]
         [Authorize(Roles = "RegisteredUser")]
         public async Task<IActionResult> ChangeQuantity(int cardID, int quantity)
         {
@@ -72,7 +86,7 @@ namespace WyrdCodexAPI.Controllers
             return Ok();
         }
 
-        [HttpDelete("remove_card")]
+        [HttpDelete("card/remove")]
         [Authorize(Roles = "RegisteredUser")]
         public async Task<IActionResult> RemoveCard(int cardID)
         {
@@ -86,7 +100,7 @@ namespace WyrdCodexAPI.Controllers
             return Ok();
         }
 
-        [HttpPost("add_to_save_for_later")]
+        [HttpPost("card/save_for_later/add")]
         [Authorize(Roles = "RegisteredUser")]
         public async Task<IActionResult> AddToSaveForLater(int cardID)
         {
@@ -107,7 +121,7 @@ namespace WyrdCodexAPI.Controllers
             return Ok();
         }
 
-        [HttpDelete("remove_from_save_for_later")]
+        [HttpDelete("card/save_for_later/remove")]
         [Authorize(Roles = "RegisteredUser")]
         public async Task<IActionResult> RemoveFromSaveForLater(int cardID)
         {
@@ -129,6 +143,18 @@ namespace WyrdCodexAPI.Controllers
             var cards = await _shoppingService.GetCardsSavedForLater(user);
 
             return Ok(cards);
+        }
+
+        [HttpPost("checkout")]
+        [Authorize(Roles = "RegisteredUser")]
+        public async Task<IActionResult> Checkout()
+        {
+            var user = await GetCurrentUser();
+            if (user == null) { return Unauthorized(); }
+
+            await _shoppingService.Checkout(user);
+
+            return Ok();
         }
 
     }

@@ -7,6 +7,7 @@
         public required string Type { get; set; }
         public required string Faction { get; set; }
         public required string ImageUrl { get; set; }
+        public float Price { get; set; }
 
         public ICollection<UserCard>? UserCards { get; set; }
         public ICollection<DeckCard>? DeckCards { get; set; }

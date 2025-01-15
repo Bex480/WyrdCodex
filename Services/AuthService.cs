@@ -190,12 +190,14 @@ namespace WyrdCodexAPI.Services
 
         public string GenerateRefreshToken()
         {
-            var randomNumber = new byte[32];
+            /*var randomNumber = new byte[32];
             using (var rng = RandomNumberGenerator.Create())
             {
                 rng.GetBytes(randomNumber);
                 return Convert.ToBase64String(randomNumber);
-            }
+            }*/
+
+            return GeneratePassword(48);
         }
 
         public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)

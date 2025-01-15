@@ -6,7 +6,6 @@
 
         public int UserId { get; set; }
         public User User { get; set; }
-        public bool IsActive { get; set; }
 
         public ICollection<CartCard>? CartCards { get; set; }
     }
