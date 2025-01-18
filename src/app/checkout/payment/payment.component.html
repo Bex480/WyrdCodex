@@ -2,35 +2,54 @@
 	<app-back-button route="/dashboard"></app-back-button>
 
 	<div class="checkoutContainer">
-		<app-cart style="max-height: 250px"></app-cart>
+		<app-cart></app-cart>
 
-		<div>
-			<input type="text" class="input" placeholder="Full Name" required>
-			<input type="text" class="input" placeholder="0000 0000 0000 0000" required>
+		<form [formGroup]="checkoutForm" (ngSubmit)="onCheckout()">
+			<div>
+				<input type="text" class="input" formControlName="fullName" placeholder="Full Name" required>
+				<div *ngIf="checkoutForm.get('fullName')?.invalid && (checkoutForm.get('fullName')?.dirty || checkoutForm.get('fullName')?.touched)">
+					<small *ngIf="checkoutForm.get('fullName')?.errors?.['required']">Full Name is required.</small>
+					<small *ngIf="checkoutForm.get('fullName')?.errors?.['pattern']">Please enter a valid name.</small>
+				</div>
 
-			<div style="display: flex; flex-direction: row">
-				<input type="text" class="input" placeholder="Expiry date: 06/25" required>
-				<input type="text" class="input" placeholder="CVV" required>
+				<input type="text" class="input" formControlName="cardNumber" placeholder="0000 0000 0000 0000" required>
+				<div *ngIf="checkoutForm.get('cardNumber')?.invalid && (checkoutForm.get('cardNumber')?.dirty || checkoutForm.get('cardNumber')?.touched)">
+					<small *ngIf="checkoutForm.get('cardNumber')?.errors?.['required']">Card Number is required.</small>
+					<small *ngIf="checkoutForm.get('cardNumber')?.errors?.['pattern']">Please enter a valid 16-digit card number.</small>
+				</div>
+
+				<div style="display: flex; flex-direction: row">
+					<div style="display: flex; flex-direction: column; width: 45%" >
+						<input type="text" class="input" formControlName="expiryDate" placeholder="Expiry date: MM/YY" required>
+						<div *ngIf="checkoutForm.get('expiryDate')?.invalid && (checkoutForm.get('expiryDate')?.dirty || checkoutForm.get('expiryDate')?.touched)">
+							<small *ngIf="checkoutForm.get('expiryDate')?.errors?.['required']">Expiry Date is required.</small>
+							<small *ngIf="checkoutForm.get('expiryDate')?.errors?.['pattern']">Please enter a valid date in MM/YY format.</small>
+						</div>
+					</div>
+
+					<div style="display: flex; flex-direction: column; width: 45%; margin-left: 35px">
+						<input type="text" class="input" formControlName="cvv" placeholder="CVV" required>
+						<div *ngIf="checkoutForm.get('cvv')?.invalid && (checkoutForm.get('cvv')?.dirty || checkoutForm.get('cvv')?.touched)">
+							<small *ngIf="checkoutForm.get('cvv')?.errors?.['required']">CVV is required.</small>
+							<small *ngIf="checkoutForm.get('cvv')?.errors?.['pattern']">Please enter a valid 3-digit CVV.</small>
+						</div>
+					</div>
+				</div>
 			</div>
-		</div>
 
-		<button (click)="onCheckout()">Checkout</button>
+			<button [disabled]="checkoutForm.invalid" type="submit" class="submitBtn">Checkout</button>
+		</form>
 	</div>
 
 	<div class="savedForLaterButton" (click)="goToSavedForLater()">
-		<img ngSrc="https://img.icons8.com/?size=100&id=MsXLF6DrtERg&format=png&color=000000"
-			 alt="saved"
-			 [width]="30"
-			 [height]="30"
-		>
+		<img ngSrc="https://img.icons8.com/?size=100&id=MsXLF6DrtERg&format=png&color=000000" alt="saved" [width]="30" [height]="30">
 	</div>
 </div>
 
-<div class="mainContainer"  *ngIf="loading">
+<div class="mainContainer" *ngIf="loading">
 	<app-loading-screen></app-loading-screen>
 </div>
 
 <div class="mainContainer" *ngIf="success">
 	<app-success-screen route="/dashboard/collection" buttonText="Collection"></app-success-screen>
 </div>
-

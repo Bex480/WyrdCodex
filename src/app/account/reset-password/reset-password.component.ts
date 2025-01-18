@@ -39,15 +39,19 @@ export class ResetPasswordComponent implements OnInit {
 
 		if (!this.token) {
 			console.error('Token is missing.');
-			this.router.navigate(['/account/login']); // Redirect to home or login page if token is missing
+			this.router.navigate(['/account/login']); // Redirect if token is missing
 		}
 	}
 
 	passwordMatchValidator(form: FormGroup) {
-		const password = form.get('password')?.value;
-		const repeatPassword = form.get('repeatPassword')?.value;
+		const password = form.get('password');
+		const repeatPassword = form.get('repeatPassword');
 
-		return password && repeatPassword && password === repeatPassword ? null : { mismatch: true };
+		if (password?.value !== repeatPassword?.value) {
+			repeatPassword?.setErrors({ mismatch: true });
+		} else {
+			repeatPassword?.setErrors(null);
+		}
 	}
 
 	onSubmit(): void {
@@ -56,20 +60,24 @@ export class ResetPasswordComponent implements OnInit {
 			const { password } = this.resetPasswordForm.value;
 
 			this.http
-				.put(`${ApiConfig.apiUrl}/User/reset_password`,
+				.put(
+					`${ApiConfig.apiUrl}/User/reset_password`,
 					{ token: this.token, newPassword: password },
-					{ observe: "response"})
+					{ observe: 'response' }
+				)
 				.subscribe(
-				(response: any) =>
-						{
-							if (response.status === 200){
-								this.loading = false;
-								this.success = true;
-							}
-						},
-					() =>
-					{
-						this.router.navigate(["/account/reset-password"], { queryParams: { token: this.token }})
+					(response: any) => {
+						if (response.status === 200) {
+							this.loading = false;
+							this.success = true;
+						}
+					},
+					(error) => {
+						console.error('Error:', error);
+						this.loading = false;
+						this.router.navigate(['/account/reset-password'], {
+							queryParams: { token: this.token }
+						});
 					}
 				);
 		}

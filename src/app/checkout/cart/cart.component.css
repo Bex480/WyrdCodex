@@ -6,6 +6,7 @@
 	padding: 25px;
 	min-width: 200px;
 	min-height: 250px;
+	max-height: 250px;
 	border-radius: 30px;
 	background: #212121;
 	box-shadow: 15px 15px 30px rgb(25, 25, 25),
