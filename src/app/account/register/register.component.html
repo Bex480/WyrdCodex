@@ -1,0 +1,83 @@
+<router-outlet></router-outlet>
+<div class="backgroundRegister">
+	<div class="containerRegister">
+
+		<form class="formRegister" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+			<b>{{language == "English" ? "Register your account" : language == "German" ? "Registrieren Sie Ihr Konto" : "Registrujte svoj račun"}}</b>
+			<div class="formGroupRow">
+				<label for="userName">{{language == "English" ? "Username" : language == "German" ? "Benutzername" : "Korisničko ime"}}</label>
+				<div class="formInputContainer">
+					<input id="userName" formControlName="userName" [ngClass]="{'invalid': isInvalid('userName')}"/>
+					<small class="reminder" *ngIf="registerForm.get('userName')?.invalid && isFormSubmitted">
+						{{language == "English" ? "Invalid username. Username is required" :
+						language == "German" ? "Ungültiger Benutzername. Benutzername ist erforderlich" : "Nevažeće korisničko ime. Korisničko ime je obavezno"}}
+						</small>
+				</div>
+			</div>
+			<div class="formGroupRow">
+				<label for="email">{{language == "English" ? "Email" : language == "German" ? "E-mail" : "Email"}}</label>
+				<div class="formInputContainer">
+					<input id="email" formControlName="email" [ngClass]="{'invalid': isInvalid('email')}"/>
+					<small class="reminder" *ngIf="registerForm.get('email')?.invalid && isFormSubmitted">
+						{{language == "English" ? "Invalid email. Email must be type: bob&#64;gmail.com" :
+						language == "German" ? "Neue E-Mail. Weitere Informationen per E-Mail: bob&#64;gmail.com"
+							: "Nevažeći email. Email mora biti tipa: bob&#64;gmail.com"}}
+						</small>
+				</div>
+			</div>
+			<div class="formGroupRow">
+				<label for="password">{{language == "English" ? "Password" :
+					language == "German" ? "Passwort" : "Lozinka"}}</label>
+				<div class="formInputContainer">
+					<input id="password" formControlName="password" type="password" [ngClass]="{'invalid': isInvalid('password')}"/>
+					<small class="reminder" *ngIf="registerForm.get('password')?.invalid && isFormSubmitted">
+						{{language == "English" ? "Password must be 6 characters long" : language == "German"
+						? "Das Passwort muss 6 Zeichen lang sein" : "Lozinka mora imati minimum 6 karaktera"}}
+						</small>
+				</div>
+			</div>
+			<div class="formGroupRow">
+				<label for="confirmPassword">{{language == "English" ? "Confirm password" : language == "German"
+					? "Passwort bestätigen" : "Potvrdi lozinku"}}</label>
+				<div class="formInputContainer">
+					<input #confirmPasswordInput id="confirmPassword" type="password" formControlName="confirmPassword" (input)="assignValue(confirmPasswordInput.value)"
+						   [ngClass]="{'invalid': !this.areSame() && isFormSubmitted}"/>
+					<small class="reminder" *ngIf="!this.areSame() && isFormSubmitted">
+						{{language == "English" ? "Passwords do not match" : language == "German"
+						? "Passwörter stimmen nicht überein" : "Lozinke se ne poklapaju"}}</small>
+				</div>
+			</div>
+
+			<div class="formGroupRow">
+				<label for="consent">{{language == "English" ? "Consent"
+					: language == "German" ? "Zustimmung"
+						: "Pristanak"}}</label>
+				<div class="checkboxContainer">
+					<input id="consent" type="checkbox" style="width: 20px;"/>
+					{{language == "English" ? "I agree to the WyrdCodex Terms and Conditions and Privacy Policy."
+					: language == "German" ? "Ich stimme den Allgemeinen Geschäftsbedingungen und Datenschutzbestimmungen von WyrdCodex zu."
+						: "Slažem se sa WyrdCodexovim uslovima i pravilima i politikom privatnosti."}}
+				</div>
+			</div>
+			<div class="formGroupRow">
+				<label for="newsletter">Newsletter</label>
+				<div class="checkboxContainer">
+					<input id="newsletter" type="checkbox" style="width: 20px;"/>
+					{{language == "English" ? "I want to receive your monthly newsletter via email."
+					: language == "German" ? "Ich möchte Ihren monatlichen Newsletter per E-Mail erhalten."
+						: "Želim primati vaš mjesečni bilten putem e-pošte."}}
+				</div>
+			</div>
+
+			<button type="submit">{{language == "English" ? "Register"
+				: language == "German" ? "Registrieren"
+					: "Registruj se"}}</button>
+		</form>
+
+		<select #languageSelect class="languageSelect" (change)="languageChange(languageSelect.value)">
+			<option>English</option>
+			<option>Bosnian</option>
+			<option>German</option>
+		</select>
+	</div>
+</div>

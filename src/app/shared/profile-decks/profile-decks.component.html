@@ -1,0 +1,7 @@
+<div class="profileDecksContainer">
+	<label id="deckLabel">Decks:</label>
+	<div class="profileDecksRow">
+		<app-card-display *ngFor="let deck of decks" [deck]="deck" (click)="showDetails(deck)"></app-card-display>
+		<app-card-details *ngIf="selectedDeck" [deck]="selectedDeck"></app-card-details>
+	</div>
+</div>

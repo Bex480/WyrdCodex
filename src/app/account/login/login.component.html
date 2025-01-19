@@ -1,0 +1,25 @@
+<div class="backgroundRegister">
+
+	<div class="containerRegister" *ngIf="!loading">
+		<form class="formRegister" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+			<b>{{language == "English" ? "Log in to your account" : language == "German" ? "Melden Sie sich bei Ihrem Konto" : "Prijavite se na svoj račun"}}</b>
+			<div class="formGroupRow">
+				<label for="email">{{ language == "English" ? "Email" : "E-mail" }}</label>
+				<input id="email" formControlName="email" [ngClass]="{'invalid': isInvalid('email')}"/>
+			</div>
+			<div class="formGroupRow">
+				<label for="password">
+					{{language == "English" ? "Password" : language == "German" ? "Passwort" : "Lozinka"}}</label>
+				<input id="password" formControlName="password" type="password" [ngClass]="{'invalid': isInvalid('password')}"/>
+			</div>
+
+			<button type="submit">{{language == "English" ? "Log in" : language == "German" ? "Einloggen" : "Prijavite se"}}</button>
+		</form>
+		<select #languageSelect class="languageSelect" (change)="languageChange(languageSelect.value)">
+			<option>English</option>
+			<option>Bosnian</option>
+			<option>German</option>
+		</select>
+	</div>
+	<app-loading-screen *ngIf="loading"></app-loading-screen>
+</div>

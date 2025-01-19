@@ -1,0 +1,25 @@
+.profileDecksContainer{
+	width: 85%;
+	height: 100%;
+	left: 15%;
+	position: absolute;
+}
+
+#deckLabel{
+	font-size: 3rem;
+	position: absolute;
+	top: 27%;
+	left: 5%;
+}
+
+.profileDecksRow{
+	display: flex;
+	justify-content: space-between;
+	max-width: 100%;
+	height: 45%;
+	padding-left: 3%;
+	gap: 3%;
+	position: absolute;
+	top: 35%;
+}
+

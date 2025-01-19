@@ -1,0 +1,7 @@
+<div *ngIf="card" class="displayContainer">
+	<img ngSrc="{{ card.imageUrl }}" alt="{{ card.cardName }}" [width]="225" [height]="300">
+</div>
+
+<div *ngIf="deck" class="deckDisplayContainer">
+	<img ngSrc="{{ deck.imageUrl }}" alt="{{ deck.deckName }}" [width]="300" [height]="400">
+</div>

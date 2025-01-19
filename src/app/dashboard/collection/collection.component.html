@@ -1,0 +1,39 @@
+
+<app-navigationbar></app-navigationbar>
+<div class="collectionBackground">
+	<div class="collectionSearchbarContainer">
+		<form class="collectionForm" [formGroup]="collectionSearchForm" (ngSubmit)="onSubmit()">
+			<div class="collectionSearchRow">
+				<label>Deck:</label>
+				<select formControlName="deckSelected">
+					<option></option>
+					<option *ngFor="let deck of deck">{{deck.deckName}}</option>
+				</select>
+			</div>
+			<div class="collectionSearchRow">
+				<label>Card name:</label>
+				<input type="search" formControlName="card_name">
+			</div>
+			<div class="collectionSearchRow">
+				<label>Type:</label>
+				<select formControlName="type">
+					<option></option>
+					<option>Unit</option>
+					<option>Action</option>
+				</select>
+			</div>
+			<div class="collectionSearchRow">
+				<label>Faction:</label>
+				<select formControlName="faction">
+					<option></option>
+					<option>Nature</option>
+					<option>Crimson</option>
+					<option>Myridian</option>
+				</select>
+			</div>
+			<button id="clear" type="submit">Search</button>
+		</form>
+	</div>
+
+	<app-card-carousel [filteredCards]="this.deckCards" [sourceOfClick]="this.clickSource"></app-card-carousel>
+</div>

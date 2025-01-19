@@ -1,0 +1,12 @@
+.profileDetails{
+	position: absolute;
+	display: flex;
+	flex-flow: column;
+	justify-content: space-between;
+	left: 20%;
+	top: 20%;
+	font-size: 2rem;
+	border: 3px solid whitesmoke;
+	border-radius: 15px;
+	padding: 3%;
+}

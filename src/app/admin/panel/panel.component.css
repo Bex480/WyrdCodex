@@ -1,0 +1,92 @@
+.mainContainer{
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	background-color: #212121;
+	height: 100vh;
+	width: 100vw;
+}
+
+.mainContainer app-card-grid {
+	height: 500px;
+	width: 100%;
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+
+.mainContainer app-card-grid::-webkit-scrollbar {
+	display: none;
+}
+
+.viewMenu {
+	display: flex;
+	width: 100%;
+	justify-content: center;
+}
+
+.contentAdmin {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+
+}
+
+.buttonMenu {
+	display: flex;
+	flex-direction: column;
+	padding: 25px;
+	margin-left: 50px;
+	justify-content: center;
+	min-width: 200px;
+	border-radius: 30px;
+	background: #212121;
+	box-shadow: 15px 15px 30px rgb(25, 25, 25),
+	-15px -15px 30px rgb(60, 60, 60);
+}
+
+.gridContainer {
+	display: flex;
+	justify-content: center;
+	width: 500px;
+	height: 500px;
+}
+
+button {
+	margin-bottom: 15px;
+	padding: 15px 25px;
+	border: unset;
+	border-radius: 15px;
+	color: #212121;
+	z-index: 1;
+	background: #e8e8e8;
+	position: relative;
+	font-weight: 1000;
+	font-size: 17px;
+	-webkit-box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
+	box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
+	transition: all 250ms;
+	overflow: hidden;
+}
+
+button::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 0;
+	border-radius: 15px;
+	background-color: #212121;
+	z-index: -1;
+	-webkit-box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
+	box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
+	transition: all 250ms
+}
+
+button:hover {
+	color: #e8e8e8;
+}
+
+button:hover::before {
+	width: 100%;
+}

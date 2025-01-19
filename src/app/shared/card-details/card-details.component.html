@@ -1,0 +1,21 @@
+<div *ngIf="card" class="cardDetails">
+	<button class="closeBtn" (click)="closeOverlay()">X</button>
+	<img ngSrc="{{ card?.imageUrl }}" alt="{{ card?.cardName }}" [width]="300" [height]="400" class="detailsImage">
+	<div style="margin: 20px 0 0 20px;">
+		<h2 class="cardName">{{ card?.cardName }}</h2>
+		<p class="cardType">Type: {{ card?.type }}</p>
+		<p class="cardFaction">Faction: {{ card?.faction }}</p>
+	</div>
+	<button *ngIf="sourceOfClick.includes('Shop')" (click)="goToCart()" class="detailsButton">Add to Cart</button>
+	<button *ngIf="sourceOfClick.includes('Collection')" (click)="goToCart()" class="detailsButton">Add to Deck</button>
+</div>
+
+<div *ngIf="deck" class="cardDetails">
+	<button class="closeBtn" (click)="closeOverlay()">X</button>
+	<img ngSrc="{{ deck.imageUrl }}" alt="{{ deck.deckName }}" [width]="300" [height]="400" class="detailsImage">
+	<div style="margin: 20px 0 0 20px;">
+		<h2 class="cardName">{{ deck.deckName }}</h2>
+		<h2 class="cardName">Deck size: {{deck.cards.length}}</h2>
+	</div>
+	<button (click)="goToCart()" class="detailsButton">Delete deck</button>
+</div>

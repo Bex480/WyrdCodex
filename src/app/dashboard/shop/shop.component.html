@@ -1,0 +1,50 @@
+<app-navigationbar></app-navigationbar>
+<router-outlet></router-outlet>
+<div class="shopBackground">
+	<div class="collectionSearchbarContainer">
+		<form class="collectionForm" [formGroup]="shopSearchForm" (ngSubmit)="onSubmit()">
+			<div class="collectionSearchRow">
+				<label>Card name:</label>
+				<input type="search" formControlName="card_name">
+			</div>
+			<div class="collectionSearchRow">
+				<label>Type:</label>
+				<select formControlName="type">
+					<option></option>
+					<option>Unit</option>
+					<option>Action</option>
+					<option>Legend</option>
+				</select>
+			</div>
+			<div class="collectionSearchRow">
+				<label>Faction:</label>
+				<select formControlName="faction">
+					<option></option>
+					<option>Nature</option>
+					<option>Crimson</option>
+					<option>Tundra</option>
+				</select>
+			</div>
+
+			<button id="clear" type="submit">Search</button>
+
+			<div class="advancedSearchContainer" (click)="this.showAdvanced = !this.showAdvanced;">
+				<div>Advanced search</div>
+				<span id="arrow" class="arrow" [class.down]="showAdvanced">➤</span>
+			</div>
+			<div class="advancedSearchBottom" *ngIf="this.showAdvanced">
+				<div class="collectionSearchRow" id="searchOne">
+					<label>Card Id:</label>
+					<input formControlName="CardID">
+				</div>
+				<div class="collectionSearchRow" id="searchTwo">
+					<label>Image URL:</label>
+					<input formControlName="image_url">
+				</div>
+			</div>
+		</form>
+	</div>
+
+	<app-card-carousel [filteredCards]="this.cardsSearched" [sourceOfClick]="this.clickSource"></app-card-carousel>
+
+</div>

@@ -1,0 +1,20 @@
+<div *ngIf="!loading">
+	<div class="mainContainer">
+		<div *ngIf="items.length == 0" class="emptyMessage">
+			NO ITEMS TO SHOW
+		</div>
+		<app-cart-item *ngFor="let item of items"
+					   [card]="item.card"
+					   [quantity]="item.quantity"
+					   [price]="item.card.price"
+					   (updatedCartItem)="cartItemUpdated()"
+					   [saved]="!atCheckout">
+		</app-cart-item>
+	</div>
+
+</div>
+
+
+<div class="loadingScreenContainer" *ngIf="loading">
+	<app-loading-screen></app-loading-screen>
+</div>

@@ -1,0 +1,22 @@
+<div class="mainContainer">
+
+	<div class="contentAdmin">
+		<div class="buttonMenu">
+			<button (click)="onBrowseCards()">Browse Cards</button>
+			<button (click)="onAddCard()">Add Card</button>
+		</div>
+
+
+		<div class="viewMenu">
+
+			<app-card-grid *ngIf="currentView === 'browse-cards'" (cardUpdate)="onCardUpdate($event)"></app-card-grid>
+
+			<app-add-card-form *ngIf="currentView === 'add-card'"></app-add-card-form>
+
+			<app-update-card-form *ngIf="selectedCardForUpdate && currentView === 'update-card'"
+								  [card]="selectedCardForUpdate"
+								  (updateComplete)="onUpdateComplete()"></app-update-card-form>
+		</div>
+
+	</div>
+</div>

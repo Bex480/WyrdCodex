@@ -1,0 +1,4 @@
+<div class="cardRows">
+	<app-card-display *ngFor="let card of cards" [card]="card" (click)="showDetails(card)"></app-card-display>
+	<app-card-details *ngIf="selectedCard" [card]="selectedCard" [sourceOfClick]="sourceOfClick"></app-card-details>
+</div>

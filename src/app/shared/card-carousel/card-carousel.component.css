@@ -1,0 +1,15 @@
+.cardRows{
+	position: fixed;
+	flex-direction: column;
+	top: 20%;
+	left: 20%;
+	padding: 1%;
+	height: 65%;
+	min-width: 37%;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 3%;
+	scroll-behavior: smooth;
+	overflow: visible;
+	scrollbar-width: none;
+}

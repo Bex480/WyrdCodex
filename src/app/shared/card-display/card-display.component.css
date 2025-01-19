@@ -1,0 +1,15 @@
+.displayContainer {
+	width: 200px;
+	max-width: 200px;
+	height: 300px;
+	max-height: 300px;
+}
+
+.deckDisplayContainer{
+	width: 300px;
+	height: 400px;
+	border-radius: 20px;
+	overflow: hidden;
+	border: 3px solid palegoldenrod;
+	cursor: pointer;
+}
