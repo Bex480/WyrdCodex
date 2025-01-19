@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {HttpClient} from '@angular/common/http';
 import {ApiConfig} from '../../config/api.config';
 import {Card} from '../../models/card.model';
+import {CardNameValidator} from '../../services/card-name-validator';
 
 @Component({
   selector: 'app-add-card-form',
@@ -17,9 +18,9 @@ export class AddCardFormComponent {
 	isHovering = false;
 	loading = false;
 
-	constructor(private fb: FormBuilder, private http: HttpClient) {
+	constructor(private fb: FormBuilder, private http: HttpClient, private cardNameValidator: CardNameValidator) {
 		this.cardForm = this.fb.group({
-			cardName: ['', [Validators.required]],
+			cardName: ['', [Validators.required], [this.cardNameValidator.validate.bind(this.cardNameValidator)]],
 			cardType: ['', [Validators.required]],
 			cardFaction: ['', [Validators.required]],
 			cardImage: [null, [Validators.required]]
@@ -88,7 +89,7 @@ export class AddCardFormComponent {
 response =>
 			{
 				this.cardForm = this.fb.group({
-					cardName: ['', [Validators.required]],
+					cardName: ['', [Validators.required], [this.cardNameValidator.validate.bind(this.cardNameValidator)]],
 					cardType: ['', [Validators.required]],
 					cardFaction: ['', [Validators.required]],
 					cardImage: [null, [Validators.required]]

@@ -3,7 +3,8 @@
 	<div class="input-group">
 		<input type="text" formControlName="cardName" class="input" placeholder="Card Name" required>
 		<div *ngIf="cardForm.get('cardName')?.invalid && cardForm.get('cardName')?.touched">
-			<small style="color: red;">Card Name is required.</small>
+			<small style="color: red;" *ngIf="cardForm.get('cardName')?.hasError('required')">Card Name is required.</small>
+			<small style="color: red;" *ngIf="cardForm.get('cardName')?.hasError('cardNameTaken')">Card Name already exists.</small>
 		</div>
 	</div>
 

@@ -5,6 +5,7 @@ import { AppComponent } from './app.component';
 import { ReactiveFormsModule} from '@angular/forms';
 import {HTTP_INTERCEPTORS, HttpClientModule, provideHttpClient, withFetch} from '@angular/common/http';
 import {AuthInterceptor} from './services/auth.interceptor';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import {AuthInterceptor} from './services/auth.interceptor';
     provideHttpClient(
       withFetch(),
     ),
-	  { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+	  { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+   provideAnimationsAsync()
   ],
   exports: [
   ],

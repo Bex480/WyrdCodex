@@ -2,7 +2,8 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CardService } from '../../services/card.service';
 import { Card } from '../../models/card.model';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { debounceTime } from 'rxjs/operators';
+import {debounceTime, map, startWith} from 'rxjs/operators';
+import {Observable} from 'rxjs';
 
 @Component({
 	selector: 'app-card-grid',
@@ -16,6 +17,7 @@ export class CardGridComponent implements OnInit {
 	loading: boolean = true;
 	selectedCard?: Card;
 	filterForm: FormGroup;
+	filteredCardNames!: Observable<string[]>;
 
 	@Output() cardUpdate = new EventEmitter<Card>();
 
@@ -35,14 +37,28 @@ export class CardGridComponent implements OnInit {
 			.subscribe((filters) => {
 				this.loadCards(filters);
 			});
+
+		this.filteredCardNames = this.filterForm.get('cardName')!.valueChanges
+			.pipe(
+				startWith(''),
+				map(value => this._filterCardNames(value || ''))
+			);
 	}
 
+	// Load cards based on filters
 	loadCards(filters: any = {}): void {
 		this.loading = true;
 		this.cardService.getCards(filters).subscribe((data: Card[]) => {
 			this.cards = data;
 			this.loading = false;
 		});
+	}
+
+	private _filterCardNames(value: string): string[] {
+		const filterValue = value.toLowerCase();
+		return this.cards
+			.map(card => card.cardName)
+			.filter(name => name.toLowerCase().includes(filterValue));
 	}
 
 	onCardDoubleClick(card: Card): void {

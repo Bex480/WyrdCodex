@@ -11,6 +11,8 @@ import {CardDetailsComponent} from './card-details/card-details.component';
 import { CardGridComponent } from './card-grid/card-grid.component';
 import { CardDetailOverlayComponent } from './card-detail-overlay/card-detail-overlay.component';
 import { BackButtonComponent } from './back-button/back-button.component';
+import {MatAutocomplete, MatAutocompleteTrigger, MatOption} from "@angular/material/autocomplete";
+import {MatInput} from '@angular/material/input';
 
 
 @NgModule({
@@ -24,12 +26,16 @@ import { BackButtonComponent } from './back-button/back-button.component';
   CardDetailOverlayComponent,
   BackButtonComponent
 	],
-    imports: [
-        CommonModule,
-        SharedRoutingModule,
-        ReactiveFormsModule,
-        NgOptimizedImage
-    ],
+	imports: [
+		CommonModule,
+		SharedRoutingModule,
+		ReactiveFormsModule,
+		NgOptimizedImage,
+		MatAutocomplete,
+		MatOption,
+		MatInput,
+		MatAutocompleteTrigger
+	],
 	exports: [
 		NavigationbarComponent,
 		LoadingScreenComponent,
