@@ -126,6 +126,16 @@ namespace WyrdCodexAPI.Data
                 .HasForeignKey(sfl => sfl.CardId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Card>()
+                .HasIndex(c => c.CardName);
+
+            modelBuilder.Entity<Card>()
+                .HasIndex(c => c.Type);
+
+            modelBuilder.Entity<Card>()
+                .HasIndex(c => c.Faction);
+
         }
     }
 }
+    

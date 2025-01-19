@@ -169,5 +169,12 @@ namespace WyrdCodexAPI.Controllers
 
             return Ok();
         }
+
+        [HttpGet("exists")]
+        public async Task<IActionResult> CheckCardNameExists([FromQuery] string name)
+        {
+            var exists = await _context.Cards.AnyAsync(c => c.CardName == name);
+            return Ok(new { exists });
+        }
     }
 }
