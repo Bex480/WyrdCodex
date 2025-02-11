@@ -1,0 +1,52 @@
+<form *ngIf="!loading" [formGroup]="cardForm" (ngSubmit)="onSubmit()" class="mainContainer">
+
+	<div class="input-group">
+		<input type="text" formControlName="cardName" class="input" placeholder="Card Name" required>
+		<div *ngIf="cardForm.get('cardName')?.invalid && cardForm.get('cardName')?.touched">
+			<small style="color: red;" *ngIf="cardForm.get('cardName')?.hasError('required')">Card Name is required.</small>
+			<small style="color: red;" *ngIf="cardForm.get('cardName')?.hasError('cardNameTaken')">Card Name already exists.</small>
+		</div>
+	</div>
+
+	<select formControlName="cardType" required>
+		<option value="" disabled selected>Select Card Type</option>
+		<option value="Unit">Unit</option>
+		<option value="Action">Action</option>
+		<option value="Legend">Legend</option>
+	</select>
+	<div *ngIf="cardForm.get('cardType')?.invalid && cardForm.get('cardType')?.touched">
+		<small style="color: red;">Card Type is required.</small>
+	</div>
+
+	<select formControlName="cardFaction" required>
+		<option value="" disabled selected>Select Card Faction</option>
+		<option value="Nature">Nature</option>
+		<option value="Crimson">Crimson</option>
+		<option value="Myridian">Myridian</option>
+	</select>
+	<div *ngIf="cardForm.get('cardFaction')?.invalid && cardForm.get('cardFaction')?.touched">
+		<small style="color: red;">Card Faction is required.</small>
+	</div>
+
+	<div style="display: flex; flex-direction: row; max-width: 250px">
+		<div id="drop-area"
+			 (dragover)="onDragOver($event)"
+			 (drop)="onDrop($event)"
+			 (dragleave)="onDragLeave($event)"
+			 [ngClass]="{'hover': isHovering}">
+			Drag & Drop an image here
+		</div>
+
+		<input type="file" id="file-input" hidden (change)="onFileSelected($event)">
+
+		<div id="preview-container" *ngIf="selectedFile">
+			<img [src]="selectedFile.preview" *ngIf="selectedFile.isImage" alt="Image Preview">
+			<p *ngIf="!selectedFile.isImage">{{ selectedFile.name }}</p>
+		</div>
+
+	</div>
+
+	<button type="submit" [disabled]="cardForm.invalid">Submit</button>
+</form>
+
+<app-loading-screen *ngIf="loading"></app-loading-screen>

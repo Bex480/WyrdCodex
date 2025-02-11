@@ -1,0 +1,36 @@
+<div class="itemContainer" *ngIf="card">
+	<div>
+		<img ngSrc="{{ card.imageUrl }}" alt="{{ card.cardName }}" [width]="50" [height]="70">
+	</div>
+
+	<div class="cardName">
+		<h3>{{ card.cardName }}</h3>
+	</div>
+
+	<div class="number-control">
+		<div class="number-left" (click)="decreaseQuantity()"></div>
+		<input type="number" id="copies" name="number" class="number-quantity" [formControl]="quantityControl" readonly>
+		<div class="number-right" (click)="increaseQuantity()"></div>
+	</div>
+
+	<div class="price">
+		<h3>${{ total.toFixed(2) }}</h3>
+	</div>
+
+	<div class="saveForLaterButton" (click)="sendToCart()" *ngIf="saved">
+		<img ngSrc="https://img.icons8.com/?size=100&id=59997&format=png&color=000000"
+			 alt="send to cart"
+			 [width]="30"
+			 [height]="30">
+	</div>
+
+	<div class="saveForLaterButton" (click)="saveForLater()" *ngIf="!saved">
+		<img ngSrc="https://img.icons8.com/?size=100&id=bJ1HZXlCwJiE&format=png&color=000000"
+			 	alt="save for later"
+				[width]="30"
+				[height]="30">
+	</div>
+
+	<button class="remove-button" (click)="removeFromCart()">X</button>
+
+</div>

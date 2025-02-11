@@ -1,0 +1,10 @@
+<div class="cardDetails">
+
+	<img ngSrc="{{ cardItself?.imageUrl }}" alt="{{ cardItself?.cardName }}" style="height: 80%; width: 50%;">
+	<div style="margin-left: 50px;">
+		<h2>{{ cardItself?.cardName }}</h2>
+		<p>Type: {{ cardItself?.type }}</p>
+		<p>Faction: {{ cardItself?.faction }}</p>
+	</div>
+	<button (click)="goToCart()">Add to Cart</button>
+</div>
